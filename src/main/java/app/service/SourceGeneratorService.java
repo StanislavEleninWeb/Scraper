@@ -28,6 +28,14 @@ public class SourceGeneratorService {
 	public SourceGenerator getOne(int id) {
 		return sourceGeneratorRepository.getOne(id);
 	}
+	
+	public boolean existsById(int id) {
+		return sourceGeneratorRepository.existsById(id);
+	}
+
+	public SourceGenerator save(SourceGenerator sourceGenerator) {
+		return sourceGeneratorRepository.save(sourceGenerator);
+	}
 
 	public void deleteById(int id) {
 		sourceGeneratorRepository.deleteById(id);

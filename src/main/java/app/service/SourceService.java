@@ -29,6 +29,14 @@ public class SourceService {
 		return sourceRepository.getOne(id);
 	}
 
+	public boolean existsById(int id) {
+		return sourceRepository.existsById(id);
+	}
+
+	public Source save(Source source) {
+		return sourceRepository.save(source);
+	}
+
 	public void deleteById(int id) {
 		sourceRepository.deleteById(id);
 	}

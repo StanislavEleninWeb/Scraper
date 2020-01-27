@@ -2,8 +2,8 @@ package app.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -14,26 +14,30 @@ import javax.validation.constraints.Size;
 public class SourceGenerator {
 
 	@Id
-	@Column(name = "id")
+	@Column(name = "source_id", nullable = false)
 	private int id;
 
 	@NotBlank
 	@Size(min = 2)
 	private String type;
 
+	@NotBlank
+	private String regex;
+
+	@NotBlank
 	private String generator;
 
-	@OneToOne
-	@MapsId
+	@OneToOne(mappedBy = "sourceGenerator", fetch = FetchType.LAZY, optional = false)
 	private Source source;
 
 	public SourceGenerator() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public SourceGenerator(@NotBlank @Size(min = 2) String type, String generator) {
+	public SourceGenerator(@NotBlank @Size(min = 2) String type, @NotBlank String regex, @NotBlank String generator) {
 		super();
 		this.type = type;
+		this.regex = regex;
 		this.generator = generator;
 	}
 
@@ -53,6 +57,14 @@ public class SourceGenerator {
 		this.type = type;
 	}
 
+	public String getRegex() {
+		return regex;
+	}
+
+	public void setRegex(String regex) {
+		this.regex = regex;
+	}
+
 	public String getGenerator() {
 		return generator;
 	}
@@ -67,6 +79,12 @@ public class SourceGenerator {
 
 	public void setSource(Source source) {
 		this.source = source;
+	}
+
+	@Override
+	public String toString() {
+		return "SourceGenerator [id=" + id + ", type=" + type + ", regex=" + regex + ", generator=" + generator
+				+ ", source=" + source + "]";
 	}
 
 }

@@ -1,10 +1,8 @@
 package app.scheduled;
 
 import java.nio.channels.InterruptedByTimeoutException;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +13,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import app.entity.Source;
+import app.scraper.LinksScraper;
 import app.service.SourceService;
 
 @Component
@@ -34,15 +33,23 @@ public class ScrapeScheduled {
 
 		Long start_scraping = System.currentTimeMillis();
 
+		// Create links scraper class
+		LinksScraper linksScraper = new LinksScraper();
+
 		// Get all sources
 		List<Source> sources = sourceService.findAll();
 
 		// Iterate over each source
 		for (Source source : sources) {
 
-			// Generate source url
-
-			// Scrape all links
+			if (source.getSourceGenerator() == null) {
+				logger.info("Missing generator for " + source);
+				continue;
+			}
+			
+			// Set LinksScraper
+			linksScraper.setRegex(source.getSourceGenerator().getRegex());
+			linksScraper.setRegex(source.getSourceGenerator().getGenerator());
 		}
 
 		Long finish_scraping = System.currentTimeMillis();

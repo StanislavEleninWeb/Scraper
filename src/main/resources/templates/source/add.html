@@ -12,7 +12,7 @@
 			<div class="col-4">
 
 				<form class="form-signin" method="POST" action="#"
-					th:action="@{/source/add}" th:object="${source}">
+					th:action="@{/source/save}" th:object="${source}">
 					<h2 class="form-signin-heading">Source Management</h2>
 
 					<p>
@@ -23,6 +23,38 @@
 							class="alert alert-danger">Title Error</label>
 					</p>
 
+					<p>
+						<label for="description" class="sr-only">Description</label> <input
+							type="text" th:field="*{description}" class="form-control"
+							placeholder="Description"> <label
+							th:if="${#fields.hasErrors('description')}"
+							th:errors="*{description}" class="alert alert-danger">Description
+							Error</label>
+					</p>
+
+					<p>
+						<label for="url" class="sr-only">Url</label> <input type="text"
+							th:field="*{url}" class="form-control" placeholder="Url" required>
+						<label th:if="${#fields.hasErrors('url')}" th:errors="*{url}"
+							class="alert alert-danger">Url Error</label>
+					</p>
+
+					<p>
+						<label for="active">Active</label> <input type="checkbox"
+							th:field="*{active}" />
+					</p>
+
+					<p>
+						<input type="text" th:field="*{createdAt}" class="form-control"
+							required disabled="disabled">
+					</p>
+
+					<p>
+						<input type="text" th:field="*{updatedAt}" class="form-control"
+							disabled="disabled">
+					</p>
+
+					<input type="hidden" th:field="*{id}">
 					<button class="btn btn-sm btn-success btn-block" type="submit">Save</button>
 				</form>
 
@@ -31,7 +63,11 @@
 
 		<div class="row justify-content-md-center mt-2">
 			<div class="col-4">
-				<a th:href="@{/source}">Back</a>
+				<p>
+					<a th:href="@{/source/generator/{id}/edit(id=*{id})}"
+						class="btn btn-sm btn-warning form-control mb3">Add Generator</a>
+				</p>
+				<a th:href="@{/source}" class="btn btn-sm btn-default btn-block">Back</a>
 			</div>
 		</div>
 

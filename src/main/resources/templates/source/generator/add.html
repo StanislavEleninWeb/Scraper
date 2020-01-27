@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="includes/head.html"></head>
+<body>
+
+	<header th:insert="includes/header.html"></header>
+
+	<!-- Start Container -->
+	<div class="container">
+
+		<div class="row justify-content-md-center mt-4 pt-4">
+			<div class="col-4">
+
+				<form class="form-signin" method="POST" action="#"
+					th:action="@{/source/generator/save}" th:object="${sourceGenerator}">
+					<h2 class="form-signin-heading">Source Management</h2>
+
+					<p>
+						<label for="type" class="sr-only">Type</label> <input type="text"
+							th:field="*{type}"
+							onkeyup="this.value = this.value.toUpperCase();"
+							class="form-control" placeholder="Type" required autofocus>
+						<label th:if="${#fields.hasErrors('type')}" th:errors="*{type}"
+							class="alert alert-danger">Type Error</label>
+					</p>
+
+					<p>
+						<label for="regex" class="sr-only">Regex</label> <input
+							type="text" th:field="*{regex}" class="form-control"
+							placeholder="Regex" required> <label
+							th:if="${#fields.hasErrors('regex')}" th:errors="*{regex}"
+							class="alert alert-danger">Regex Error</label>
+					</p>
+
+					<p>
+						<label for="generator" class="sr-only">Generator</label> <input
+							type="text" th:field="*{generator}" class="form-control"
+							placeholder="Generator" required> <label
+							th:if="${#fields.hasErrors('generator')}"
+							th:errors="*{generator}" class="alert alert-danger">Generator
+							Error</label>
+					</p>
+
+					<input type="hidden" th:field="*{id}">
+					<button class="btn btn-sm btn-success btn-block" type="submit">Save</button>
+				</form>
+
+			</div>
+		</div>
+
+		<div class="row justify-content-md-center mt-2">
+			<div class="col-4">
+				<a th:href="@{/source/{id}/edit(id=${sourceGenerator.id})}" class="btn btn-sm btn-default btn-block">Back</a>
+			</div>
+		</div>
+
+	</div>
+	<!-- End Container -->
+
+</body>
+</html>

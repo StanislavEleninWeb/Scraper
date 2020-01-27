@@ -24,9 +24,7 @@ public class SourceController {
 
 	@GetMapping
 	public String index(Model model) {
-
 		model.addAttribute("sources", sourceService.findAll());
-
 		return "source/index";
 	}
 
@@ -43,7 +41,13 @@ public class SourceController {
 
 	@PostMapping("/save")
 	public String save(@Valid @ModelAttribute("source") Source source, BindingResult bindingResult) {
-		return "redirect:/source";
+
+		if (bindingResult.hasErrors())
+			return "source/add";
+
+		Source result = sourceService.save(source);
+
+		return "redirect:/source/" + result.getId() + "/edit";
 	}
 
 	@GetMapping("/{id}/delete")
