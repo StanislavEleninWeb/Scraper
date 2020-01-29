@@ -9,6 +9,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.URL;
+
 @Entity
 @Table(name = "source_generator")
 public class SourceGenerator {
@@ -20,6 +22,10 @@ public class SourceGenerator {
 	@NotBlank
 	@Size(min = 2)
 	private String type;
+
+	@NotBlank
+	@URL
+	private String url;
 
 	@NotBlank
 	private String regex;
@@ -34,9 +40,11 @@ public class SourceGenerator {
 		// TODO Auto-generated constructor stub
 	}
 
-	public SourceGenerator(@NotBlank @Size(min = 2) String type, @NotBlank String regex, @NotBlank String generator) {
+	public SourceGenerator(@NotBlank @Size(min = 2) String type, @NotBlank @URL String url, @NotBlank String regex,
+			@NotBlank String generator) {
 		super();
 		this.type = type;
+		this.url = url;
 		this.regex = regex;
 		this.generator = generator;
 	}
@@ -55,6 +63,14 @@ public class SourceGenerator {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	public String getRegex() {
@@ -83,8 +99,8 @@ public class SourceGenerator {
 
 	@Override
 	public String toString() {
-		return "SourceGenerator [id=" + id + ", type=" + type + ", regex=" + regex + ", generator=" + generator
-				+ ", source=" + source + "]";
+		return "SourceGenerator [id=" + id + ", type=" + type + ", url=" + url + ", regex=" + regex + ", generator="
+				+ generator + "]";
 	}
 
 }

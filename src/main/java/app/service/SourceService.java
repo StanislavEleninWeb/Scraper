@@ -24,6 +24,10 @@ public class SourceService {
 	public Optional<Source> findById(int id) {
 		return sourceRepository.findById(id);
 	}
+	
+	public List<Source> findByActive(Boolean active) {
+		return sourceRepository.findByActive(active);
+	}
 
 	public Source getOne(int id) {
 		return sourceRepository.getOne(id);

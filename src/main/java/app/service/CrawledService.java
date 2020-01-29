@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import app.entity.Crawled;
 import app.repository.CrawledRepository;
 
 @Service
@@ -15,6 +16,10 @@ public class CrawledService {
 
 	public boolean isCrawledUrlAlreadySaved(String url) {
 		return crawledRepository.findByUrl(url) == null ? false : true;
+	}
+
+	public void save(Crawled crawled) {
+		crawledRepository.save(crawled);
 	}
 
 }

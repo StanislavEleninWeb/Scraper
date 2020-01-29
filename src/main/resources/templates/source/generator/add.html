@@ -12,7 +12,8 @@
 			<div class="col-4">
 
 				<form class="form-signin" method="POST" action="#"
-					th:action="@{/source/generator/save}" th:object="${sourceGenerator}">
+					th:action="@{/source/generator/save}"
+					th:object="${sourceGenerator}">
 					<h2 class="form-signin-heading">Source Management</h2>
 
 					<p>
@@ -22,6 +23,13 @@
 							class="form-control" placeholder="Type" required autofocus>
 						<label th:if="${#fields.hasErrors('type')}" th:errors="*{type}"
 							class="alert alert-danger">Type Error</label>
+					</p>
+
+					<p>
+						<label for="type" class="sr-only">Url</label> <input type="text"
+							th:field="*{url}" class="form-control" placeholder="Url" required>
+						<label th:if="${#fields.hasErrors('url')}" th:errors="*{url}"
+							class="alert alert-danger">Url Error</label>
 					</p>
 
 					<p>
@@ -50,7 +58,8 @@
 
 		<div class="row justify-content-md-center mt-2">
 			<div class="col-4">
-				<a th:href="@{/source/{id}/edit(id=${sourceGenerator.id})}" class="btn btn-sm btn-default btn-block">Back</a>
+				<a th:href="@{/source/{id}/edit(id=${sourceGenerator.id})}"
+					class="btn btn-sm btn-default btn-block">Back</a>
 			</div>
 		</div>
 

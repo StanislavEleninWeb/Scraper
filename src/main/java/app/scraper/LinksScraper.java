@@ -47,9 +47,7 @@ public class LinksScraper {
 
 		try {
 
-			HtmlPage page = client.getPage(this.url);
-			
-			System.err.println(page.getByXPath(regex));
+			HtmlPage page = client.getPage(url);
 
 			List<DomAttr> items = page.getByXPath(regex);
 
