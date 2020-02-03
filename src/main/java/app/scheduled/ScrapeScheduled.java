@@ -19,12 +19,14 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import app.entity.Crawled;
+import app.entity.CrawledImage;
 import app.entity.CrawledInfo;
-import app.entity.Rating;
+import app.entity.CrawledRating;
 import app.entity.Source;
-import app.scraper.AnalyzeRating;
 import app.scraper.ContentScraper;
 import app.scraper.LinksScraper;
+import app.scraper.analyze.AnalyzeContent;
+import app.scraper.analyze.AnalyzeRating;
 import app.service.CrawledService;
 import app.service.SourceService;
 
@@ -78,24 +80,55 @@ public class ScrapeScheduled {
 			for (String link : links) {
 
 				// Check if link is already crawled
-				if (crawledService.isCrawledUrlAlreadySaved(link))
+				if (crawledService.isCrawledUrlAlreadySaved(link)) {
+					logger.info("Url address " + link + " has already been crawled!");
 					continue;
+				}
 
 				// Sleep for random time to mimic human behaviour
 				sleepForRandomInterval();
 
-				// Set Crawled
-				Crawled crawled = new Crawled();
-				crawled.setUrl(link);
+				// Scrape content
+				ContentScraper contentScraper = new ContentScraper(link);
+				if (contentScraper.getPage() == null) {
+					logger.info("Failed to fetch page " + link);
+					continue;
+				}
+
+				AnalyzeContent analyzeContent = null;
+				try {
+					analyzeContent = (AnalyzeContent) Class.forName(source.getSourceGenerator().getContentRegex())
+							.newInstance();
+				} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+					logger.info("No such analyze class found! " + e.getMessage());
+					e.printStackTrace();
+					continue;
+				}
+
+				analyzeContent.setPage(contentScraper.getPage());
+				analyzeContent.analyze();
 
 				// Crawl url address and return CrawledInfo object
-				CrawledInfo crawledInfo = new ContentScraper(link).getCrawledInfo();
+				CrawledInfo crawledInfo = new CrawledInfo(analyzeContent.getTitle(), analyzeContent.getDescription(),
+						analyzeContent.getKeywords(), analyzeContent.getRegion(), analyzeContent.getType(),
+						analyzeContent.getCurrency(), analyzeContent.getPrice(), analyzeContent.getPricePerSquare(),
+						analyzeContent.getSize(), analyzeContent.getFloor(), analyzeContent.getBuildType(),
+						analyzeContent.getBuildAt());
 
 				// Rating
-				Rating rating = new AnalyzeRating(crawledInfo).getRating();
+				CrawledRating crawledRating = new AnalyzeRating(crawledInfo).getCrawledRating();
+
+				// Images
+				List<CrawledImage> crawledImages = null;
+				if (analyzeContent.getImages() != null) {
+					crawledImages = processImages(analyzeContent.getImages());
+				}
 
 				// Save Crawled, Crawled, Rating
+				Crawled crawled = new Crawled(link);
 				crawled.setCrawledInfo(crawledInfo);
+				crawled.setCrawledRating(crawledRating);
+				crawled.setCrawledImages(crawledImages);
 
 				crawledService.save(crawled);
 			}
@@ -127,7 +160,7 @@ public class ScrapeScheduled {
 
 		if (source.getSourceGenerator().getType().equalsIgnoreCase("GET")) {
 			url = source.getSourceGenerator().getUrl();
-			regex = source.getSourceGenerator().getRegex();
+			regex = source.getSourceGenerator().getLinkRegex();
 		} else if (source.getSourceGenerator().getType().equalsIgnoreCase("POST")) {
 
 		}
@@ -148,6 +181,10 @@ public class ScrapeScheduled {
 		}
 
 		return links;
+	}
+
+	private List<CrawledImage> processImages(List<String> images) {
+		return null;
 	}
 
 	private Boolean isValidUrl(String url) {

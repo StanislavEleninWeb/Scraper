@@ -1,9 +1,9 @@
-package app.scraper;
+package app.scraper.analyze;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import app.entity.CrawledInfo;
-import app.entity.Rating;
+import app.entity.CrawledRating;
 import app.service.CrawledService;
 
 public class AnalyzeRating {
@@ -39,8 +39,8 @@ public class AnalyzeRating {
 		avg = (price + pricePerSquare + size) / 3;
 	}
 
-	public Rating getRating() {
-		Rating rating = new Rating();
+	public CrawledRating getCrawledRating() {
+		CrawledRating rating = new CrawledRating();
 
 		rating.setPrice(price);
 		rating.setPricePerSquare(pricePerSquare);
@@ -49,4 +49,5 @@ public class AnalyzeRating {
 
 		return rating;
 	}
+
 }

@@ -28,10 +28,16 @@ public class SourceGenerator {
 	private String url;
 
 	@NotBlank
-	private String regex;
+	@Column(name = "link_regex", nullable = false)
+	private String linkRegex;
 
 	@NotBlank
-	private String generator;
+	@Column(name = "content_regex", nullable = false)
+	private String contentRegex;
+
+	@NotBlank
+	@Column(name = "image_regex", nullable = false)
+	private String imageRegex;
 
 	@OneToOne(mappedBy = "sourceGenerator", fetch = FetchType.LAZY, optional = false)
 	private Source source;
@@ -40,13 +46,14 @@ public class SourceGenerator {
 		// TODO Auto-generated constructor stub
 	}
 
-	public SourceGenerator(@NotBlank @Size(min = 2) String type, @NotBlank @URL String url, @NotBlank String regex,
-			@NotBlank String generator) {
+	public SourceGenerator(@NotBlank @Size(min = 2) String type, @NotBlank @URL String url, @NotBlank String linkRegex,
+			@NotBlank String contentRegex, @NotBlank String imageRegex) {
 		super();
 		this.type = type;
 		this.url = url;
-		this.regex = regex;
-		this.generator = generator;
+		this.linkRegex = linkRegex;
+		this.contentRegex = contentRegex;
+		this.imageRegex = imageRegex;
 	}
 
 	public int getId() {
@@ -73,20 +80,28 @@ public class SourceGenerator {
 		this.url = url;
 	}
 
-	public String getRegex() {
-		return regex;
+	public String getLinkRegex() {
+		return linkRegex;
 	}
 
-	public void setRegex(String regex) {
-		this.regex = regex;
+	public void setLinkRegex(String linkRegex) {
+		this.linkRegex = linkRegex;
 	}
 
-	public String getGenerator() {
-		return generator;
+	public String getContentRegex() {
+		return contentRegex;
 	}
 
-	public void setGenerator(String generator) {
-		this.generator = generator;
+	public void setContentRegex(String contentRegex) {
+		this.contentRegex = contentRegex;
+	}
+
+	public String getImageRegex() {
+		return imageRegex;
+	}
+
+	public void setImageRegex(String imageRegex) {
+		this.imageRegex = imageRegex;
 	}
 
 	public Source getSource() {
@@ -99,8 +114,8 @@ public class SourceGenerator {
 
 	@Override
 	public String toString() {
-		return "SourceGenerator [id=" + id + ", type=" + type + ", url=" + url + ", regex=" + regex + ", generator="
-				+ generator + "]";
+		return "SourceGenerator [id=" + id + ", type=" + type + ", url=" + url + ", linkRegex=" + linkRegex
+				+ ", contentRegex=" + contentRegex + ", imageRegex=" + imageRegex + "]";
 	}
 
 }

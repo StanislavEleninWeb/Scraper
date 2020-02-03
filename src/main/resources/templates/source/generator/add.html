@@ -33,20 +33,27 @@
 					</p>
 
 					<p>
-						<label for="regex" class="sr-only">Regex</label> <input
-							type="text" th:field="*{regex}" class="form-control"
-							placeholder="Regex" required> <label
-							th:if="${#fields.hasErrors('regex')}" th:errors="*{regex}"
-							class="alert alert-danger">Regex Error</label>
+						<label for="linkRegex" class="sr-only">Link Regex</label> <input
+							type="text" th:field="*{linkRegex}" class="form-control"
+							placeholder="Link Regex" required> <label
+							th:if="${#fields.hasErrors('linkRegex')}" th:errors="*{linkRegex}"
+							class="alert alert-danger">Link Regex Error</label>
 					</p>
-
+					
 					<p>
-						<label for="generator" class="sr-only">Generator</label> <input
-							type="text" th:field="*{generator}" class="form-control"
-							placeholder="Generator" required> <label
-							th:if="${#fields.hasErrors('generator')}"
-							th:errors="*{generator}" class="alert alert-danger">Generator
-							Error</label>
+						<label for="contentRegex" class="sr-only">Content Regex</label> <input
+							type="text" th:field="*{ContentRegex}" class="form-control"
+							placeholder="Content Regex" required> <label
+							th:if="${#fields.hasErrors('contentRegex')}" th:errors="*{contentRegex}"
+							class="alert alert-danger">Content Regex Error</label>
+					</p>
+					
+					<p>
+						<label for="imageRegex" class="sr-only">Image Regex</label> <input
+							type="text" th:field="*{imageRegex}" class="form-control"
+							placeholder="Image Regex" required> <label
+							th:if="${#fields.hasErrors('imageRegex')}" th:errors="*{imageRegex}"
+							class="alert alert-danger">Image Regex Error</label>
 					</p>
 
 					<input type="hidden" th:field="*{id}">

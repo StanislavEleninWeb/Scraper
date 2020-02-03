@@ -1,8 +1,8 @@
 package app.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,7 +10,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -47,9 +50,20 @@ public class Crawled {
 	@JoinColumn(name = "source_id")
 	private Source source;
 
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY)
 	@PrimaryKeyJoinColumn
 	private CrawledInfo crawledInfo;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@PrimaryKeyJoinColumn
+	private CrawledRating crawledRating;
+
+	@OneToMany(mappedBy = "crawled", fetch = FetchType.LAZY)
+	private List<CrawledImage> crawledImages;
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "course_student", joinColumns = @JoinColumn(name = "crawled_id"), inverseJoinColumns = @JoinColumn(name = "contact_id"))
+	private List<Contact> contacts;
 
 	public Crawled() {
 		// TODO Auto-generated constructor stub
@@ -106,6 +120,30 @@ public class Crawled {
 
 	public void setCrawledInfo(CrawledInfo crawledInfo) {
 		this.crawledInfo = crawledInfo;
+	}
+
+	public CrawledRating getCrawledRating() {
+		return crawledRating;
+	}
+
+	public void setCrawledRating(CrawledRating crawledRating) {
+		this.crawledRating = crawledRating;
+	}
+
+	public List<CrawledImage> getCrawledImages() {
+		return crawledImages;
+	}
+
+	public void setCrawledImages(List<CrawledImage> crawledImages) {
+		this.crawledImages = crawledImages;
+	}
+
+	public List<Contact> getContacts() {
+		return contacts;
+	}
+
+	public void setContacts(List<Contact> contacts) {
+		this.contacts = contacts;
 	}
 
 	@Override

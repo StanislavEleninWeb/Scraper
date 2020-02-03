@@ -1,40 +1,36 @@
 package app.scraper;
 
-import app.entity.CrawledInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class ContentScraper {
 
-	private String title;
-	private String description;
-	private String keywords;
-	private String region;
-	private String currency;
-	private double price;
-	private double pricePerSquare;
-	private double size;
-	private int floor;
-	private String premiseType;
+	private HtmlPage page;
 
-	public ContentScraper(String string) {
-		System.err.println("Constructor with string");
+	Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	public ContentScraper(String url) {
+
+		WebClient client = new WebClient(BrowserVersion.CHROME);
+
+		client.getOptions().setCssEnabled(false);
+		client.getOptions().setJavaScriptEnabled(false);
+
+		try {
+			page = client.getPage(url);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		client.close();
 	}
 
-	public CrawledInfo getCrawledInfo() {
-
-		CrawledInfo info = new CrawledInfo();
-
-		info.setTitle(title);
-		info.setDescription(description);
-		info.setKeywords(keywords);
-		info.setRegion(region);
-		info.setCurrency(currency);
-		info.setPrice(price);
-		info.setPricePerSquare(pricePerSquare);
-		info.setSize(size);
-		info.setFloor(floor);
-		info.setPremiseType(premiseType);
-
-		return info;
+	public HtmlPage getPage() {
+		return page;
 	}
 
 }

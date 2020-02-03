@@ -17,7 +17,7 @@ import javax.validation.constraints.Size;
 public class CrawledInfo {
 
 	@Id
-	@Column(name = "id")
+	@Column(name = "crawled_id")
 	private int id;
 
 	@NotBlank
@@ -30,6 +30,8 @@ public class CrawledInfo {
 
 	// Mestopolojenie
 	private String region;
+
+	private String type;
 
 	@NotBlank
 	private String currency;
@@ -48,19 +50,16 @@ public class CrawledInfo {
 	@Min(value = 0)
 	private double size;
 
+	@Min(value = 0)
 	private int floor;
 
-	// Vid na imota [tristaen]
-	@Column(name = "premise_type")
-	private String premiseType;
-
 	// Vid stroitelstvo [tuhla]
-	@Column(name = "premise_build_type")
-	private String premiseBuildType;
+	@Column(name = "build_type")
+	private String buildType;
 
 	// Godina na stroej
-	@Column(name = "premise_build_at")
-	private LocalDate premiseBuildAt;
+	@Column(name = "build_at")
+	private LocalDate buildAt;
 
 	@OneToOne(mappedBy = "crawledInfo", fetch = FetchType.LAZY)
 	private Crawled crawled;
@@ -69,24 +68,23 @@ public class CrawledInfo {
 		// TODO Auto-generated constructor stub
 	}
 
-	public CrawledInfo(int id, @NotBlank @Size(min = 2) String title, String description, String keywords,
-			String region, @NotBlank String currency, @NotBlank @Min(0) double price,
-			@NotBlank @Min(0) double pricePerSquare, @NotBlank @Min(0) double size, int floor, String premiseType,
-			String premiseBuildType, LocalDate premiseBuildAt) {
+	public CrawledInfo(@NotBlank @Size(min = 2) String title, String description, String keywords, String region,
+			String type, @NotBlank String currency, @NotBlank @Min(0) double price,
+			@NotBlank @Min(0) double pricePerSquare, @NotBlank @Min(0) double size, @Min(0) int floor, String buildType,
+			LocalDate buildAt) {
 		super();
-		this.id = id;
 		this.title = title;
 		this.description = description;
 		this.keywords = keywords;
 		this.region = region;
+		this.type = type;
 		this.currency = currency;
 		this.price = price;
 		this.pricePerSquare = pricePerSquare;
 		this.size = size;
 		this.floor = floor;
-		this.premiseType = premiseType;
-		this.premiseBuildType = premiseBuildType;
-		this.premiseBuildAt = premiseBuildAt;
+		this.buildType = buildType;
+		this.buildAt = buildAt;
 	}
 
 	public int getId() {
@@ -129,6 +127,14 @@ public class CrawledInfo {
 		this.region = region;
 	}
 
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
 	public String getCurrency() {
 		return currency;
 	}
@@ -169,28 +175,20 @@ public class CrawledInfo {
 		this.floor = floor;
 	}
 
-	public String getPremiseType() {
-		return premiseType;
+	public String getBuildType() {
+		return buildType;
 	}
 
-	public void setPremiseType(String premiseType) {
-		this.premiseType = premiseType;
+	public void setBuildType(String buildType) {
+		this.buildType = buildType;
 	}
 
-	public String getPremiseBuildType() {
-		return premiseBuildType;
+	public LocalDate getBuildAt() {
+		return buildAt;
 	}
 
-	public void setPremiseBuildType(String premiseBuildType) {
-		this.premiseBuildType = premiseBuildType;
-	}
-
-	public LocalDate getPremiseBuildAt() {
-		return premiseBuildAt;
-	}
-
-	public void setPremiseBuildAt(LocalDate premiseBuildAt) {
-		this.premiseBuildAt = premiseBuildAt;
+	public void setBuildAt(LocalDate buildAt) {
+		this.buildAt = buildAt;
 	}
 
 	public Crawled getCrawled() {
@@ -204,9 +202,9 @@ public class CrawledInfo {
 	@Override
 	public String toString() {
 		return "CrawledInfo [id=" + id + ", title=" + title + ", description=" + description + ", keywords=" + keywords
-				+ ", region=" + region + ", currency=" + currency + ", price=" + price + ", pricePerSquare="
-				+ pricePerSquare + ", size=" + size + ", floor=" + floor + ", premiseType=" + premiseType
-				+ ", premiseBuildType=" + premiseBuildType + ", premiseBuildAt=" + premiseBuildAt + "]";
+				+ ", region=" + region + ", type=" + type + ", currency=" + currency + ", price=" + price
+				+ ", pricePerSquare=" + pricePerSquare + ", size=" + size + ", floor=" + floor + ", buildType="
+				+ buildType + ", buildAt=" + buildAt + "]";
 	}
 
 }

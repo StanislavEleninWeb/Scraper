@@ -2,8 +2,8 @@ package app.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
@@ -12,10 +12,10 @@ import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "rating")
-public class Rating {
+public class CrawledRating {
 
 	@Id
-	@Column(name = "id")
+	@Column(name = "crawled_id")
 	private int id;
 
 	@NotBlank
@@ -39,15 +39,14 @@ public class Rating {
 	@Max(10)
 	private float size;
 
-	@OneToOne
-	@MapsId
+	@OneToOne(mappedBy = "crawledRating", fetch = FetchType.LAZY)
 	private Crawled crawled;
 
-	public Rating() {
+	public CrawledRating() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Rating(@NotBlank @Min(0) @Max(10) float avg, @NotBlank @Min(0) @Max(10) float price,
+	public CrawledRating(@NotBlank @Min(0) @Max(10) float avg, @NotBlank @Min(0) @Max(10) float price,
 			@NotBlank @Min(0) @Max(10) float pricePerSquare, @NotBlank @Min(0) @Max(10) float size) {
 		super();
 		this.avg = avg;
@@ -102,6 +101,12 @@ public class Rating {
 
 	public void setCrawled(Crawled crawled) {
 		this.crawled = crawled;
+	}
+
+	@Override
+	public String toString() {
+		return "CrawledRating [id=" + id + ", avg=" + avg + ", price=" + price + ", pricePerSquare=" + pricePerSquare
+				+ ", size=" + size + "]";
 	}
 
 }
