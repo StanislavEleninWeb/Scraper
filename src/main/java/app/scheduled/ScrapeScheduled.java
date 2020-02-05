@@ -104,7 +104,7 @@ public class ScrapeScheduled {
 				// Instance of AnalyzeContent class
 				AnalyzeContent analyzeContent;
 				try {
-					analyzeContent = (AnalyzeContent) Class.forName(source.getSourceGenerator().getContentRegex())
+					analyzeContent = (AnalyzeContent) Class.forName(source.getSourceGenerator().getContentAnalyzer())
 							.newInstance();
 				} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 					logger.error("No such analyze class found! ");

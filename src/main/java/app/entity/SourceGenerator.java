@@ -32,12 +32,8 @@ public class SourceGenerator {
 	private String linkRegex;
 
 	@NotBlank
-	@Column(name = "content_regex", nullable = false)
-	private String contentRegex;
-
-	@NotBlank
-	@Column(name = "image_regex", nullable = false)
-	private String imageRegex;
+	@Column(name = "content_analyzer", nullable = false)
+	private String contentAnalyzer;
 
 	@OneToOne(mappedBy = "sourceGenerator", fetch = FetchType.LAZY, optional = false)
 	private Source source;
@@ -47,13 +43,12 @@ public class SourceGenerator {
 	}
 
 	public SourceGenerator(@NotBlank @Size(min = 2) String type, @NotBlank @URL String url, @NotBlank String linkRegex,
-			@NotBlank String contentRegex, @NotBlank String imageRegex) {
+			@NotBlank String contentAnalyzer) {
 		super();
 		this.type = type;
 		this.url = url;
 		this.linkRegex = linkRegex;
-		this.contentRegex = contentRegex;
-		this.imageRegex = imageRegex;
+		this.contentAnalyzer = contentAnalyzer;
 	}
 
 	public int getId() {
@@ -88,20 +83,12 @@ public class SourceGenerator {
 		this.linkRegex = linkRegex;
 	}
 
-	public String getContentRegex() {
-		return contentRegex;
+	public String getContentAnalyzer() {
+		return contentAnalyzer;
 	}
 
-	public void setContentRegex(String contentRegex) {
-		this.contentRegex = contentRegex;
-	}
-
-	public String getImageRegex() {
-		return imageRegex;
-	}
-
-	public void setImageRegex(String imageRegex) {
-		this.imageRegex = imageRegex;
+	public void setContentAnalyzer(String contentAnalyzer) {
+		this.contentAnalyzer = contentAnalyzer;
 	}
 
 	public Source getSource() {
@@ -115,7 +102,7 @@ public class SourceGenerator {
 	@Override
 	public String toString() {
 		return "SourceGenerator [id=" + id + ", type=" + type + ", url=" + url + ", linkRegex=" + linkRegex
-				+ ", contentRegex=" + contentRegex + ", imageRegex=" + imageRegex + "]";
+				+ ", contentAnalyzer=" + contentAnalyzer + "]";
 	}
 
 }

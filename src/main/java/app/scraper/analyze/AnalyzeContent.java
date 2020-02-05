@@ -2,7 +2,6 @@ package app.scraper.analyze;
 
 import java.util.List;
 
-import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public abstract class AnalyzeContent {
@@ -23,30 +22,6 @@ public abstract class AnalyzeContent {
 	protected List<String> images;
 
 	public abstract void analyze() throws Exception;
-
-	protected abstract void setTitle(HtmlElement container) throws Exception;
-
-	protected abstract void setDescription(HtmlElement container) throws Exception;
-
-	protected abstract void setKeywords(HtmlElement container) throws Exception;
-
-	protected abstract void setRegion(HtmlElement container) throws Exception;
-
-	protected abstract void setType(HtmlElement container) throws Exception;
-
-	protected abstract void setCurrency(HtmlElement container) throws Exception;
-
-	protected abstract void setPrice(HtmlElement container) throws Exception;
-
-	protected abstract void setPricePerSquare(HtmlElement container) throws Exception;
-
-	protected abstract void setSize(HtmlElement container) throws Exception;
-
-	protected abstract void setFloor(HtmlElement container) throws Exception;
-
-	protected abstract void setBuildType(HtmlElement container) throws Exception;
-
-	protected abstract void setBuildAt(HtmlElement container) throws Exception;
 
 	public HtmlPage getHtml() {
 		return html;
@@ -107,4 +82,13 @@ public abstract class AnalyzeContent {
 	public List<String> getImages() {
 		return images;
 	}
+
+	@Override
+	public String toString() {
+		return "AnalyzeContent [html=" + html + ", title=" + title + ", description=" + description + ", keywords="
+				+ keywords + ", region=" + region + ", type=" + type + ", currency=" + currency + ", price=" + price
+				+ ", pricePerSquare=" + pricePerSquare + ", size=" + size + ", floor=" + floor + ", buildType="
+				+ buildType + ", buildAt=" + buildAt + ", images=" + images + "]";
+	}
+
 }

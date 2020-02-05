@@ -84,20 +84,17 @@ public class AnalyzeContentAloBg extends AnalyzeContent {
 //		setImages();
 	}
 
-	@Override
 	protected void setTitle(HtmlElement container) throws Exception {
 		HtmlHeading1 responseTitle = (HtmlHeading1) container
 				.getByXPath(".//div[contains(@class, 'big-info theme-color1')]//h1").get(0);
 		title = responseTitle.getTextContent().trim();
 	}
 
-	@Override
 	protected void setDescription(HtmlElement container) throws Exception {
 		HtmlParagraph responseDescription = (HtmlParagraph) html.getByXPath(".//div[@class=\"more-info\"]//p").get(0);
 		description = responseDescription.getTextContent().trim();
 	}
 
-	@Override
 	protected void setKeywords(HtmlElement container) throws Exception {
 		List<HtmlSpan> responseKeywords = container.getByXPath(".//span");
 		for (HtmlSpan itr : responseKeywords) {
@@ -106,7 +103,6 @@ public class AnalyzeContentAloBg extends AnalyzeContent {
 		keywords = keywords.substring(0, keywords.length() - 1);
 	}
 
-	@Override
 	protected void setRegion(HtmlElement container) throws Exception {
 		List<HtmlSpan> responseRegion = container.getByXPath(".//span[@title]");
 		for (HtmlSpan itr : responseRegion) {
@@ -115,49 +111,41 @@ public class AnalyzeContentAloBg extends AnalyzeContent {
 		region = region.substring(0, region.length() - 1);
 	}
 
-	@Override
 	protected void setType(HtmlElement container) throws Exception {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	protected void setCurrency(HtmlElement container) throws Exception {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	protected void setPrice(HtmlElement container) throws Exception {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	protected void setPricePerSquare(HtmlElement container) throws Exception {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	protected void setSize(HtmlElement container) throws Exception {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	protected void setFloor(HtmlElement container) throws Exception {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	protected void setBuildType(HtmlElement container) throws Exception {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	protected void setBuildAt(HtmlElement container) throws Exception {
 		List<DomAttr> responseImages = html.getByXPath(".//div[@class=\"images\"]//img/@src");
 

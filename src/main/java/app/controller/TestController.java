@@ -65,9 +65,9 @@ public class TestController {
 	@ResponseBody
 	public String contentScraper() {
 
-		String link = "https://www.alo.bg/5528646";
+		String link = "https://www.olx.bg/ad/tristaen-v-kyuchuk-parizh-CID368-ID7khdh.html#217d944456";
 
-		Source source = sourceService.getOne(1);
+		Source source = sourceService.getOne(2);
 
 		// Scrape content
 		ContentScraper contentScraper = null;
@@ -83,7 +83,7 @@ public class TestController {
 
 		AnalyzeContent analyzeContent = null;
 		try {
-			analyzeContent = (AnalyzeContent) Class.forName(source.getSourceGenerator().getContentRegex())
+			analyzeContent = (AnalyzeContent) Class.forName(source.getSourceGenerator().getContentAnalyzer())
 					.newInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			e.printStackTrace();

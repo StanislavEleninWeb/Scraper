@@ -41,19 +41,11 @@
 					</p>
 					
 					<p>
-						<label for="contentRegex" class="sr-only">Content Regex</label> <input
-							type="text" th:field="*{ContentRegex}" class="form-control"
-							placeholder="Content Regex" required> <label
-							th:if="${#fields.hasErrors('contentRegex')}" th:errors="*{contentRegex}"
-							class="alert alert-danger">Content Regex Error</label>
-					</p>
-					
-					<p>
-						<label for="imageRegex" class="sr-only">Image Regex</label> <input
-							type="text" th:field="*{imageRegex}" class="form-control"
-							placeholder="Image Regex" required> <label
-							th:if="${#fields.hasErrors('imageRegex')}" th:errors="*{imageRegex}"
-							class="alert alert-danger">Image Regex Error</label>
+						<label for="contentAnalyzer" class="sr-only">Content Analyzer</label> <input
+							type="text" th:field="*{contentAnalyzer}" class="form-control"
+							placeholder="Content Analyzer" required> <label
+							th:if="${#fields.hasErrors('contentAnalyzer')}" th:errors="*{contentAnalyzer}"
+							class="alert alert-danger">Content Analyzer Error</label>
 					</p>
 
 					<input type="hidden" th:field="*{id}">
