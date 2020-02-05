@@ -1,8 +1,5 @@
 package app.scraper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -11,24 +8,28 @@ public class ContentScraper {
 
 	private HtmlPage page;
 
-	Logger logger = LoggerFactory.getLogger(this.getClass());
-
-	public ContentScraper(String url) {
+	/**
+	 * Scrapes the content of url address
+	 * 
+	 * @param url
+	 * @throws Exception
+	 */
+	public ContentScraper(String url) throws Exception {
 
 		WebClient client = new WebClient(BrowserVersion.CHROME);
 
 		client.getOptions().setCssEnabled(false);
 		client.getOptions().setJavaScriptEnabled(false);
 
-		try {
-			page = client.getPage(url);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		page = client.getPage(url);
 
 		client.close();
 	}
 
+	/**
+	 * 
+	 * @return HtmlPage
+	 */
 	public HtmlPage getPage() {
 		return page;
 	}

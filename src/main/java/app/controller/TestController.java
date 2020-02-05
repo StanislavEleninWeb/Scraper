@@ -1,6 +1,8 @@
 package app.controller;
 
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -68,7 +70,13 @@ public class TestController {
 		Source source = sourceService.getOne(1);
 
 		// Scrape content
-		ContentScraper contentScraper = new ContentScraper(link);
+		ContentScraper contentScraper = null;
+		try {
+			contentScraper = new ContentScraper(link);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		if (contentScraper.getPage() == null) {
 			System.out.println("Failed to fetch page " + link);
 		}
@@ -81,12 +89,48 @@ public class TestController {
 			e.printStackTrace();
 		}
 
-		analyzeContent.setPage(contentScraper.getPage());
-		analyzeContent.analyze();
+		analyzeContent.setHtml(contentScraper.getPage());
+		try {
+			analyzeContent.analyze();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		System.err.println(analyzeContent);
 
-		return "";
+		return analyzeContent.toString();
+	}
+
+	@GetMapping("/regex")
+	@ResponseBody
+	public String regex() {
+
+		String str = "57 948 EUR597.40 EUR/кв.м";
+		String regex = "\\d+(?:[\\.\\s]\\d+)?";
+
+		Pattern pattern = Pattern.compile(regex, Pattern.UNICODE_CASE | Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+
+		System.err.println(pattern.pattern());
+		
+		str = str.replaceAll("&"+"nbsp;", " "); 
+		str = str.replaceAll(String.valueOf((char) 160), " ");
+
+		Matcher matcher = pattern.matcher(str);
+
+		matcher.find();
+
+		System.err.println(matcher.group());
+
+		matcher.find();
+
+		System.err.println(matcher.group());
+
+//		while (matcher.find()) {
+//			System.err.println(matcher.group());
+//		}
+
+		return null;
 	}
 
 }

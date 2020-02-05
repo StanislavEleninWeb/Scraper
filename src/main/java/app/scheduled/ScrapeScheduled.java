@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.text.AbstractDocument.Content;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +32,8 @@ import app.scraper.analyze.AnalyzeRating;
 import app.service.CrawledService;
 import app.service.SourceService;
 
-@Component
-@EnableAsync
+//@Component
+//@EnableAsync
 public class ScrapeScheduled {
 
 	Logger logger = LoggerFactory.getLogger(getClass());
@@ -63,14 +65,15 @@ public class ScrapeScheduled {
 			logger.info("Fetching source " + source);
 
 			if (source.getSourceGenerator() == null) {
-				logger.info("Missing source generator for " + source);
+				logger.error("Missing source generator for " + source);
+				logger.error("Skiping source...");
 				continue;
 			}
 
 			// Get Source links as String
 			List<String> links = getAllLinks(source);
 			if (links == null) {
-				logger.info("No links found for source " + source);
+				logger.error("No links found for source " + source);
 				continue;
 			} else {
 				logger.info("Found " + links.size() + " Links");
@@ -89,24 +92,40 @@ public class ScrapeScheduled {
 				sleepForRandomInterval();
 
 				// Scrape content
-				ContentScraper contentScraper = new ContentScraper(link);
-				if (contentScraper.getPage() == null) {
+				ContentScraper contentScraper;
+				try {
+					contentScraper = new ContentScraper(link);
+				} catch (Exception e) {
 					logger.info("Failed to fetch page " + link);
+					logger.error(e.getMessage());
 					continue;
 				}
 
-				AnalyzeContent analyzeContent = null;
+				// Instance of AnalyzeContent class
+				AnalyzeContent analyzeContent;
 				try {
 					analyzeContent = (AnalyzeContent) Class.forName(source.getSourceGenerator().getContentRegex())
 							.newInstance();
 				} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-					logger.info("No such analyze class found! " + e.getMessage());
-					e.printStackTrace();
+					logger.error("No such analyze class found! ");
+					logger.error(e.getMessage());
 					continue;
 				}
 
-				analyzeContent.setPage(contentScraper.getPage());
-				analyzeContent.analyze();
+				// Check for page content and analyze
+				if (contentScraper.getPage() == null) {
+					logger.error("Not found page content for address " + link);
+					continue;
+				}
+				analyzeContent.setHtml(contentScraper.getPage());
+
+				try {
+					analyzeContent.analyze();
+				} catch (Exception e) {
+					logger.error("Failed to analyze page content for address " + link);
+					logger.error(e.getMessage());
+					continue;
+				}
 
 				// Crawl url address and return CrawledInfo object
 				CrawledInfo crawledInfo = new CrawledInfo(analyzeContent.getTitle(), analyzeContent.getDescription(),
@@ -114,24 +133,29 @@ public class ScrapeScheduled {
 						analyzeContent.getCurrency(), analyzeContent.getPrice(), analyzeContent.getPricePerSquare(),
 						analyzeContent.getSize(), analyzeContent.getFloor(), analyzeContent.getBuildType(),
 						analyzeContent.getBuildAt());
+				
+				System.err.println(crawledInfo);
 
-				// Rating
-				CrawledRating crawledRating = new AnalyzeRating(crawledInfo).getCrawledRating();
+//				// Rating
+//				CrawledRating crawledRating = new AnalyzeRating(crawledInfo).getCrawledRating();
+//
+//				// Images
+//				List<CrawledImage> crawledImages = null;
+//				if (analyzeContent.getImages() != null) {
+//					crawledImages = processImages(analyzeContent.getImages());
+//				}
+//
+//				// Save Crawled, Crawled, Rating
+//				Crawled crawled = new Crawled(link);
+//				crawled.setCrawledInfo(crawledInfo);
+//				crawled.setCrawledRating(crawledRating);
+//				crawled.setCrawledImages(crawledImages);
+//
+//				crawledService.save(crawled);
 
-				// Images
-				List<CrawledImage> crawledImages = null;
-				if (analyzeContent.getImages() != null) {
-					crawledImages = processImages(analyzeContent.getImages());
-				}
-
-				// Save Crawled, Crawled, Rating
-				Crawled crawled = new Crawled(link);
-				crawled.setCrawledInfo(crawledInfo);
-				crawled.setCrawledRating(crawledRating);
-				crawled.setCrawledImages(crawledImages);
-
-				crawledService.save(crawled);
+				break;
 			}
+			break;
 
 		}
 
@@ -148,7 +172,14 @@ public class ScrapeScheduled {
 		logger.info("----------------------------------------------------------------------------------");
 	}
 
+	/**
+	 * Fetches source content and analyze href
+	 * 
+	 * @param source
+	 * @return List<String>
+	 */
 	private List<String> getAllLinks(Source source) {
+
 		String url = null;
 		String regex = null;
 
@@ -163,6 +194,8 @@ public class ScrapeScheduled {
 			regex = source.getSourceGenerator().getLinkRegex();
 		} else if (source.getSourceGenerator().getType().equalsIgnoreCase("POST")) {
 
+		} else {
+			return null;
 		}
 
 		// Set LinksScraper
@@ -177,16 +210,28 @@ public class ScrapeScheduled {
 				links.add(link);
 			}
 		} catch (Exception e) {
-
+			return null;
 		}
 
 		return links;
 	}
 
+	/**
+	 * Iterate over List<String> of images and process images.
+	 * 
+	 * @param images
+	 * @return List<CrawledImage>
+	 */
 	private List<CrawledImage> processImages(List<String> images) {
 		return null;
 	}
 
+	/**
+	 * Check if url address is valid
+	 * 
+	 * @param url
+	 * @return Boolean
+	 */
 	private Boolean isValidUrl(String url) {
 
 		try {
@@ -198,6 +243,13 @@ public class ScrapeScheduled {
 		return true;
 	}
 
+	/**
+	 * Adds host name to url address
+	 * 
+	 * @param base Source url host name
+	 * @param url
+	 * @return String valid url adress
+	 */
 	private String sanitizeUrl(String base, String url) {
 
 		try {
@@ -212,6 +264,9 @@ public class ScrapeScheduled {
 		return null;
 	}
 
+	/**
+	 * Sleep for random interval ot time
+	 */
 	private void sleepForRandomInterval() {
 		int min = 1;
 		int max = 4;

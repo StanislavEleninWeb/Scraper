@@ -1,13 +1,13 @@
 package app.scraper.analyze;
 
-import java.time.LocalDate;
 import java.util.List;
 
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public abstract class AnalyzeContent {
 
-	protected HtmlPage page;
+	protected HtmlPage html;
 	protected String title;
 	protected String description;
 	protected String keywords;
@@ -19,69 +19,41 @@ public abstract class AnalyzeContent {
 	protected double size;
 	protected int floor;
 	protected String buildType;
-	protected LocalDate buildAt;
+	protected String buildAt;
 	protected List<String> images;
 
-	public abstract void analyze();
+	public abstract void analyze() throws Exception;
 
-	public HtmlPage getPage() {
-		return page;
+	protected abstract void setTitle(HtmlElement container) throws Exception;
+
+	protected abstract void setDescription(HtmlElement container) throws Exception;
+
+	protected abstract void setKeywords(HtmlElement container) throws Exception;
+
+	protected abstract void setRegion(HtmlElement container) throws Exception;
+
+	protected abstract void setType(HtmlElement container) throws Exception;
+
+	protected abstract void setCurrency(HtmlElement container) throws Exception;
+
+	protected abstract void setPrice(HtmlElement container) throws Exception;
+
+	protected abstract void setPricePerSquare(HtmlElement container) throws Exception;
+
+	protected abstract void setSize(HtmlElement container) throws Exception;
+
+	protected abstract void setFloor(HtmlElement container) throws Exception;
+
+	protected abstract void setBuildType(HtmlElement container) throws Exception;
+
+	protected abstract void setBuildAt(HtmlElement container) throws Exception;
+
+	public HtmlPage getHtml() {
+		return html;
 	}
 
-	public void setPage(HtmlPage page) {
-		this.page = page;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public void setKeywords(String keywords) {
-		this.keywords = keywords;
-	}
-
-	public void setRegion(String region) {
-		this.region = region;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public void setCurrency(String currency) {
-		this.currency = currency;
-	}
-
-	public void setPrice(double price) {
-		this.price = price;
-	}
-
-	public void setPricePerSquare(double pricePerSquare) {
-		this.pricePerSquare = pricePerSquare;
-	}
-
-	public void setSize(double size) {
-		this.size = size;
-	}
-
-	public void setFloor(int floor) {
-		this.floor = floor;
-	}
-
-	public void setBuildType(String buildType) {
-		this.buildType = buildType;
-	}
-
-	public void setBuildAt(LocalDate buildAt) {
-		this.buildAt = buildAt;
-	}
-
-	public void setImages(List<String> images) {
-		this.images = images;
+	public void setHtml(HtmlPage html) {
+		this.html = html;
 	}
 
 	public String getTitle() {
@@ -128,7 +100,7 @@ public abstract class AnalyzeContent {
 		return buildType;
 	}
 
-	public LocalDate getBuildAt() {
+	public String getBuildAt() {
 		return buildAt;
 	}
 

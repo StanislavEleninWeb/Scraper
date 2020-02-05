@@ -1,7 +1,5 @@
 package app.entity;
 
-import java.time.LocalDate;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -59,7 +57,7 @@ public class CrawledInfo {
 
 	// Godina na stroej
 	@Column(name = "build_at")
-	private LocalDate buildAt;
+	private String buildAt;
 
 	@OneToOne(mappedBy = "crawledInfo", fetch = FetchType.LAZY)
 	private Crawled crawled;
@@ -71,7 +69,7 @@ public class CrawledInfo {
 	public CrawledInfo(@NotBlank @Size(min = 2) String title, String description, String keywords, String region,
 			String type, @NotBlank String currency, @NotBlank @Min(0) double price,
 			@NotBlank @Min(0) double pricePerSquare, @NotBlank @Min(0) double size, @Min(0) int floor, String buildType,
-			LocalDate buildAt) {
+			String buildAt) {
 		super();
 		this.title = title;
 		this.description = description;
@@ -183,11 +181,11 @@ public class CrawledInfo {
 		this.buildType = buildType;
 	}
 
-	public LocalDate getBuildAt() {
+	public String getBuildAt() {
 		return buildAt;
 	}
 
-	public void setBuildAt(LocalDate buildAt) {
+	public void setBuildAt(String buildAt) {
 		this.buildAt = buildAt;
 	}
 

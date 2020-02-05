@@ -36,7 +36,7 @@ public class LinksScraper {
 		this.regex = regex;
 	}
 
-	public List<String> getLinks() {
+	public List<String> getLinks() throws Exception {
 
 		List<String> links = new ArrayList<String>();
 
@@ -45,23 +45,16 @@ public class LinksScraper {
 		client.getOptions().setCssEnabled(false);
 		client.getOptions().setJavaScriptEnabled(false);
 
-		try {
+		HtmlPage page = client.getPage(url);
 
-			HtmlPage page = client.getPage(url);
+		List<DomAttr> items = page.getByXPath(regex);
 
-			List<DomAttr> items = page.getByXPath(regex);
-
-			if (items.isEmpty()) {
-				logger.info("For address : " + url + " No matches");
-			} else {
-				for (DomAttr item : items) {
-					links.add(item.getValue());
-				}
+		if (items.isEmpty()) {
+			logger.info("For address : " + url + " No matches");
+		} else {
+			for (DomAttr item : items) {
+				links.add(item.getValue());
 			}
-
-		} catch (Exception e) {
-			logger.info(e.getMessage());
-			e.printStackTrace();
 		}
 
 		client.close();
