@@ -1,8 +1,12 @@
 package app.scraper.analyze;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+
+import app.enumerated.CurrencyEnum;
+import app.enumerated.RequestTypeEnum;
 
 public abstract class AnalyzeContent {
 
@@ -12,11 +16,11 @@ public abstract class AnalyzeContent {
 	protected String keywords;
 	protected String region;
 	protected String type;
-	protected String currency;
-	protected double price;
-	protected double pricePerSquare;
-	protected double size;
-	protected int floor;
+	protected CurrencyEnum currency;
+	protected BigDecimal price;
+	protected BigDecimal pricePerSquare;
+	protected short size;
+	protected byte floor;
 	protected String buildType;
 	protected String buildAt;
 	protected List<String> images;
@@ -51,23 +55,23 @@ public abstract class AnalyzeContent {
 		return type;
 	}
 
-	public String getCurrency() {
+	public CurrencyEnum getCurrency() {
 		return currency;
 	}
 
-	public double getPrice() {
+	public BigDecimal getPrice() {
 		return price;
 	}
 
-	public double getPricePerSquare() {
+	public BigDecimal getPricePerSquare() {
 		return pricePerSquare;
 	}
 
-	public double getSize() {
+	public Short getSize() {
 		return size;
 	}
 
-	public int getFloor() {
+	public Byte getFloor() {
 		return floor;
 	}
 
@@ -81,6 +85,14 @@ public abstract class AnalyzeContent {
 
 	public List<String> getImages() {
 		return images;
+	}
+
+	public RequestTypeEnum getRequestTypeEnum(String string) throws Exception {
+		return RequestTypeEnum.valueOf(string.toUpperCase());
+	}
+
+	public CurrencyEnum getCurrencyEnum(String string) throws Exception {
+		return CurrencyEnum.valueOf(string.toUpperCase());
 	}
 
 	@Override

@@ -2,14 +2,17 @@ package app.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.URL;
+
+import app.enumerated.RequestTypeEnum;
 
 @Entity
 @Table(name = "source_generator")
@@ -20,8 +23,8 @@ public class SourceGenerator {
 	private int id;
 
 	@NotBlank
-	@Size(min = 2)
-	private String type;
+	@Enumerated(EnumType.STRING)
+	private RequestTypeEnum type;
 
 	@NotBlank
 	@URL
@@ -42,7 +45,7 @@ public class SourceGenerator {
 		// TODO Auto-generated constructor stub
 	}
 
-	public SourceGenerator(@NotBlank @Size(min = 2) String type, @NotBlank @URL String url, @NotBlank String linkRegex,
+	public SourceGenerator(@NotBlank RequestTypeEnum type, @NotBlank @URL String url, @NotBlank String linkRegex,
 			@NotBlank String contentAnalyzer) {
 		super();
 		this.type = type;
@@ -59,11 +62,11 @@ public class SourceGenerator {
 		this.id = id;
 	}
 
-	public String getType() {
+	public RequestTypeEnum getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(RequestTypeEnum type) {
 		this.type = type;
 	}
 

@@ -1,15 +1,11 @@
 package app.scraper.analyze;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.math.BigDecimal;
 
 import app.entity.CrawledInfo;
 import app.entity.CrawledRating;
-import app.service.CrawledService;
 
 public class AnalyzeRating {
-
-	@Autowired
-	private CrawledService crawledService;
 
 	private float avg;
 	private float price;
@@ -23,15 +19,15 @@ public class AnalyzeRating {
 		calculateAvgRating();
 	}
 
-	private void calculatePriceRating(double price) {
+	private void calculatePriceRating(BigDecimal price) {
 
 	}
 
-	private void calculatePricePerSquareRating(double pricePerSquare) {
+	private void calculatePricePerSquareRating(BigDecimal pricePerSquare) {
 
 	}
 
-	private void calculateSizeRating(double size) {
+	private void calculateSizeRating(Short size) {
 
 	}
 

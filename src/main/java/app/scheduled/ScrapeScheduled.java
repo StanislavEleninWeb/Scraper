@@ -25,6 +25,7 @@ import app.entity.CrawledImage;
 import app.entity.CrawledInfo;
 import app.entity.CrawledRating;
 import app.entity.Source;
+import app.enumerated.RequestTypeEnum;
 import app.scraper.ContentScraper;
 import app.scraper.LinksScraper;
 import app.scraper.analyze.AnalyzeContent;
@@ -133,7 +134,7 @@ public class ScrapeScheduled {
 						analyzeContent.getCurrency(), analyzeContent.getPrice(), analyzeContent.getPricePerSquare(),
 						analyzeContent.getSize(), analyzeContent.getFloor(), analyzeContent.getBuildType(),
 						analyzeContent.getBuildAt());
-				
+
 				System.err.println(crawledInfo);
 
 //				// Rating
@@ -189,10 +190,10 @@ public class ScrapeScheduled {
 		// Create empty list
 		List<String> links = new ArrayList<String>();
 
-		if (source.getSourceGenerator().getType().equalsIgnoreCase("GET")) {
+		if (source.getSourceGenerator().getType() == RequestTypeEnum.GET) {
 			url = source.getSourceGenerator().getUrl();
 			regex = source.getSourceGenerator().getLinkRegex();
-		} else if (source.getSourceGenerator().getType().equalsIgnoreCase("POST")) {
+		} else if (source.getSourceGenerator().getType() == RequestTypeEnum.POST) {
 
 		} else {
 			return null;

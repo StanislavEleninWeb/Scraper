@@ -25,11 +25,11 @@ public class CrawledImage {
 	private int id;
 
 	@NotBlank
-	@Size(min = 60)
+	@Size(min = 60, max = 60)
 	private String filename;
 
 	@NotBlank
-	@Size(min = 2)
+	@Size(min = 2, max = 4)
 	private String ext;
 
 	@CreationTimestamp
@@ -44,8 +44,8 @@ public class CrawledImage {
 		// TODO Auto-generated constructor stub
 	}
 
-	public CrawledImage(@NotBlank @Size(min = 60) String filename, @NotBlank @Size(min = 2) String ext,
-			LocalDateTime createdAt) {
+	public CrawledImage(@NotBlank @Size(min = 60, max = 60) String filename,
+			@NotBlank @Size(min = 2, max = 4) String ext, LocalDateTime createdAt) {
 		super();
 		this.filename = filename;
 		this.ext = ext;

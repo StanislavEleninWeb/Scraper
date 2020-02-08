@@ -1,5 +1,6 @@
 package app.scraper.analyze;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -103,7 +104,7 @@ public class AnalyzeContentOlxBg extends AnalyzeContent {
 		Matcher matcher = pattern.matcher(cleanString);
 
 		matcher.find();
-		price = Double.parseDouble(matcher.group());
+		price = new BigDecimal(matcher.group());
 	}
 
 	protected void setPricePerSquare(HtmlElement container) throws Exception {
@@ -116,7 +117,7 @@ public class AnalyzeContentOlxBg extends AnalyzeContent {
 		Matcher matcher = pattern.matcher(cleanString);
 
 		matcher.find();
-		pricePerSquare = Double.parseDouble(matcher.group());
+		pricePerSquare = new BigDecimal(matcher.group());
 
 	}
 
@@ -124,7 +125,7 @@ public class AnalyzeContentOlxBg extends AnalyzeContent {
 		HtmlStrong response = (HtmlStrong) container
 				.getByXPath(".//div[@id=\"offeractions\"]//div[@class=\"price-label\"]//strong").get(0);
 
-		currency = response.getTextContent().replaceAll("[0-9]", "").replace("\u20AC", "EUR").trim();
+		currency = getCurrencyEnum(response.getTextContent().replaceAll("[0-9]", "").replace("\u20AC", "EUR").trim());
 	}
 
 	protected void setType(HtmlElement container) throws Exception {
@@ -132,7 +133,7 @@ public class AnalyzeContentOlxBg extends AnalyzeContent {
 	}
 
 	protected void setFloor(HtmlElement container) throws Exception {
-		floor = Integer.parseInt(container.getTextContent().replaceAll("[^0-9]", ""));
+		floor = new Byte(container.getTextContent().replaceAll("[^0-9]", ""));
 	}
 
 	protected void setSize(HtmlElement container) throws Exception {
@@ -145,7 +146,7 @@ public class AnalyzeContentOlxBg extends AnalyzeContent {
 		Matcher matcher = pattern.matcher(cleanString);
 
 		matcher.find();
-		size = Double.parseDouble(matcher.group());
+		size = Short.parseShort(matcher.group());
 
 	}
 

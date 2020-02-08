@@ -1,7 +1,11 @@
 package app.entity;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
@@ -9,6 +13,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
+import app.enumerated.CurrencyEnum;
 
 @Entity
 @Table(name = "crawled_info")
@@ -32,24 +38,25 @@ public class CrawledInfo {
 	private String type;
 
 	@NotBlank
-	private String currency;
+	@Enumerated(EnumType.STRING)
+	private CurrencyEnum currency;
 
 	@NotBlank
 	@Min(value = 0)
-	private double price;
+	private BigDecimal price;
 
 	@NotBlank
 	@Min(value = 0)
 	@Column(name = "price_per_square")
-	private double pricePerSquare;
+	private BigDecimal pricePerSquare;
 
 	// Kvadratura
 	@NotBlank
 	@Min(value = 0)
-	private double size;
+	private short size;
 
 	@Min(value = 0)
-	private int floor;
+	private byte floor;
 
 	// Vid stroitelstvo [tuhla]
 	@Column(name = "build_type")
@@ -67,9 +74,9 @@ public class CrawledInfo {
 	}
 
 	public CrawledInfo(@NotBlank @Size(min = 2) String title, String description, String keywords, String region,
-			String type, @NotBlank String currency, @NotBlank @Min(0) double price,
-			@NotBlank @Min(0) double pricePerSquare, @NotBlank @Min(0) double size, @Min(0) int floor, String buildType,
-			String buildAt) {
+			String type, @NotBlank CurrencyEnum currency, @NotBlank @Min(0) BigDecimal price,
+			@NotBlank @Min(0) BigDecimal pricePerSquare, @NotBlank @Min(0) short size, @Min(0) byte floor,
+			String buildType, String buildAt) {
 		super();
 		this.title = title;
 		this.description = description;
@@ -133,43 +140,43 @@ public class CrawledInfo {
 		this.type = type;
 	}
 
-	public String getCurrency() {
+	public CurrencyEnum getCurrency() {
 		return currency;
 	}
 
-	public void setCurrency(String currency) {
+	public void setCurrency(CurrencyEnum currency) {
 		this.currency = currency;
 	}
 
-	public double getPrice() {
+	public BigDecimal getPrice() {
 		return price;
 	}
 
-	public void setPrice(double price) {
+	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
 
-	public double getPricePerSquare() {
+	public BigDecimal getPricePerSquare() {
 		return pricePerSquare;
 	}
 
-	public void setPricePerSquare(double pricePerSquare) {
+	public void setPricePerSquare(BigDecimal pricePerSquare) {
 		this.pricePerSquare = pricePerSquare;
 	}
 
-	public double getSize() {
+	public short getSize() {
 		return size;
 	}
 
-	public void setSize(double size) {
+	public void setSize(short size) {
 		this.size = size;
 	}
 
-	public int getFloor() {
+	public byte getFloor() {
 		return floor;
 	}
 
-	public void setFloor(int floor) {
+	public void setFloor(byte floor) {
 		this.floor = floor;
 	}
 
