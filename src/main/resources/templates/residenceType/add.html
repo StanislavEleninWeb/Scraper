@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="includes/head.html"></head>
+<body>
+
+	<header th:insert="includes/header.html"></header>
+
+	<!-- Start Container -->
+	<div class="container">
+
+		<div class="row justify-content-md-center mt-4 pt-4">
+			<div class="col-4">
+
+				<form class="form-signin" method="POST" action="#"
+					th:action="@{/residence/type/save}" th:object="${residenceType}">
+					<h2 class="form-signin-heading">Source Management</h2>
+
+					<p>
+						<label for="title" class="sr-only">Title</label> <input
+							type="text" th:field="*{title}" class="form-control"
+							placeholder="Title" required autofocus> <label
+							th:if="${#fields.hasErrors('title')}" th:errors="*{title}"
+							class="alert alert-danger">Title Error</label>
+					</p>
+
+					<p>
+						<label for="keywords" class="sr-only">Keywords</label> <input
+							type="text" th:field="*{keywords}" class="form-control"
+							placeholder="Keywords"> <label
+							th:if="${#fields.hasErrors('keywords')}"
+							th:errors="*{keywords}" class="alert alert-danger">Keywords
+							Error</label>
+					</p>
+
+
+					<p>
+						<input type="text" th:field="*{createdAt}" class="form-control"
+							required disabled="disabled">
+					</p>
+
+					<p>
+						<input type="text" th:field="*{updatedAt}" class="form-control"
+							disabled="disabled">
+					</p>
+
+					<input type="hidden" th:field="*{id}">
+					<button class="btn btn-sm btn-success btn-block" type="submit">Save</button>
+				</form>
+
+			</div>
+		</div>
+
+		<div class="row justify-content-md-center mt-2">
+			<div class="col-4">
+				<a th:href="@{/residence/type}" class="btn btn-sm btn-default btn-block">Back</a>
+			</div>
+		</div>
+
+	</div>
+	<!-- End Container -->
+
+</body>
+</html>

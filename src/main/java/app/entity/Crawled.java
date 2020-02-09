@@ -20,6 +20,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.URL;
 
 import app.validation.CrawledUrl;
@@ -39,11 +40,12 @@ public class Crawled {
 	@Column(name = "url")
 	private String url;
 
-	@Column(name = "created_at")
+	@Column(name = "created_at", updatable = false)
 	@CreationTimestamp
 	private LocalDateTime createdAt;
 
 	@Column(name = "updated_at")
+	@UpdateTimestamp
 	private LocalDateTime updatedAt;
 
 	@ManyToOne(fetch = FetchType.EAGER)

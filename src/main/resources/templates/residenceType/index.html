@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="includes/head.html"></head>
+<body>
+
+	<header th:insert="includes/header.html"></header>
+
+	<!-- Start Container -->
+	<div class="container">
+
+		<div class="row mt-5">
+			<div class="col">
+				<span>Lists</span> <a th:href="@{/residence/type/add}"
+					class="btn btn-sm btn-success float-right">Add</a>
+			</div>
+		</div>
+
+		<div class="row justify-content-md-center mt-2">
+
+			<table class="table table-striped table-condensed">
+				<thead>
+					<th>ID</th>
+					<th>Title</th>
+					<th></th>
+				</thead>
+				<tr th:each="residenceType : ${residenceTypes}">
+					<td th:text="${residenceType.id}"></td>
+					<td th:text="${residenceType.title}"></td>
+					<td><a th:href="@{/residence/type/{id}/edit(id=${residenceType.id})}"
+						class="btn btn-sm btn-warning">Edit</a> <a
+						th:href="@{/residence/type/{id}/delete(id=${residenceType.id})}"
+						class="btn btn-sm btn-danger">Delete</a></td>
+				</tr>
+			</table>
+
+		</div>
+
+	</div>
+	<!-- End Container -->
+
+</body>
+</html>
