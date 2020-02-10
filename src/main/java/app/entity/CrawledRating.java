@@ -1,5 +1,6 @@
 package app.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,46 +9,42 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 
 @Entity
-@Table(name = "rating")
+@Table(name = "crawled_rating")
 public class CrawledRating {
 
 	@Id
 	@Column(name = "crawled_id")
 	private int id;
 
-	@NotBlank
 	@Min(0)
 	@Max(10)
-	private float avg;
+	@Column(name = "average")
+	private Double avg;
 
-	@NotBlank
 	@Min(0)
 	@Max(10)
-	private float price;
+	private Double price;
 
-	@NotBlank
 	@Min(0)
 	@Max(10)
 	@Column(name = "price_per_square")
-	private float pricePerSquare;
+	private Double pricePerSquare;
 
-	@NotBlank
 	@Min(0)
 	@Max(10)
-	private float size;
+	private Double size;
 
-	@OneToOne(mappedBy = "crawledRating", fetch = FetchType.LAZY)
+	@OneToOne(mappedBy = "crawledRating", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Crawled crawled;
 
 	public CrawledRating() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public CrawledRating(@NotBlank @Min(0) @Max(10) float avg, @NotBlank @Min(0) @Max(10) float price,
-			@NotBlank @Min(0) @Max(10) float pricePerSquare, @NotBlank @Min(0) @Max(10) float size) {
+	public CrawledRating(@Min(0) @Max(10) Double avg, @Min(0) @Max(10) Double price,
+			@Min(0) @Max(10) Double pricePerSquare, @Min(0) @Max(10) Double size) {
 		super();
 		this.avg = avg;
 		this.price = price;
@@ -63,35 +60,35 @@ public class CrawledRating {
 		this.id = id;
 	}
 
-	public float getAvg() {
+	public Double getAvg() {
 		return avg;
 	}
 
-	public void setAvg(float avg) {
+	public void setAvg(Double avg) {
 		this.avg = avg;
 	}
 
-	public float getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(float price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 
-	public float getPricePerSquare() {
+	public Double getPricePerSquare() {
 		return pricePerSquare;
 	}
 
-	public void setPricePerSquare(float pricePerSquare) {
+	public void setPricePerSquare(Double pricePerSquare) {
 		this.pricePerSquare = pricePerSquare;
 	}
 
-	public float getSize() {
+	public Double getSize() {
 		return size;
 	}
 
-	public void setSize(float size) {
+	public void setSize(Double size) {
 		this.size = size;
 	}
 

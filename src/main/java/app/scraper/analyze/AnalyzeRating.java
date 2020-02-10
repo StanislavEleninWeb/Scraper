@@ -20,15 +20,15 @@ public class AnalyzeRating {
 	}
 
 	private void calculatePriceRating(BigDecimal price) {
-
+		this.price = 5;
 	}
 
 	private void calculatePricePerSquareRating(BigDecimal pricePerSquare) {
-
+		this.pricePerSquare = 4;
 	}
 
 	private void calculateSizeRating(Short size) {
-
+		this.size = 4;
 	}
 
 	private void calculateAvgRating() {

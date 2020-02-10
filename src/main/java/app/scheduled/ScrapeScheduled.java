@@ -129,30 +129,39 @@ public class ScrapeScheduled {
 				}
 
 				// Crawl url address and return CrawledInfo object
-				CrawledInfo crawledInfo = new CrawledInfo(analyzeContent.getTitle(), analyzeContent.getDescription(),
-						analyzeContent.getKeywords(), analyzeContent.getRegion(), analyzeContent.getType(),
-						analyzeContent.getCurrency(), analyzeContent.getPrice(), analyzeContent.getPricePerSquare(),
-						analyzeContent.getSize(), analyzeContent.getFloor(), analyzeContent.getBuildType(),
-						analyzeContent.getBuildAt());
+				CrawledInfo crawledInfo = new CrawledInfo(
+						analyzeContent.getTitle(), 
+						analyzeContent.getDescription(), 
+						analyzeContent.getKeywords(), 
+						analyzeContent.getRegion(), 
+						analyzeContent.getCurrency(), 
+						analyzeContent.getPrice(), 
+						analyzeContent.getPricePerSquare(), 
+						analyzeContent.getSize(), 
+						analyzeContent.getFloor(), 
+						analyzeContent.getBuildAt(), 
+						analyzeContent.getType(), 
+						analyzeContent.getBuildType()
+						);
 
 				System.err.println(crawledInfo);
 
-//				// Rating
-//				CrawledRating crawledRating = new AnalyzeRating(crawledInfo).getCrawledRating();
-//
-//				// Images
-//				List<CrawledImage> crawledImages = null;
-//				if (analyzeContent.getImages() != null) {
-//					crawledImages = processImages(analyzeContent.getImages());
-//				}
-//
-//				// Save Crawled, Crawled, Rating
-//				Crawled crawled = new Crawled(link);
-//				crawled.setCrawledInfo(crawledInfo);
-//				crawled.setCrawledRating(crawledRating);
-//				crawled.setCrawledImages(crawledImages);
-//
-//				crawledService.save(crawled);
+				// Rating
+				CrawledRating crawledRating = new AnalyzeRating(crawledInfo).getCrawledRating();
+
+				// Images
+				List<CrawledImage> crawledImages = null;
+				if (analyzeContent.getImages() != null) {
+					crawledImages = processImages(analyzeContent.getImages());
+				}
+
+				// Save Crawled, Crawled, Rating
+				Crawled crawled = new Crawled(link);
+				crawled.setCrawledInfo(crawledInfo);
+				crawled.setCrawledRating(crawledRating);
+				crawled.setCrawledImages(crawledImages);
+
+				crawledService.save(crawled);
 
 				break;
 			}

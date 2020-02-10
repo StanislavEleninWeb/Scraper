@@ -3,6 +3,7 @@ package app.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -56,7 +57,7 @@ public class Crawled {
 	@PrimaryKeyJoinColumn
 	private CrawledInfo crawledInfo;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@PrimaryKeyJoinColumn
 	private CrawledRating crawledRating;
 

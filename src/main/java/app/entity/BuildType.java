@@ -1,12 +1,15 @@
 package app.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -38,6 +41,9 @@ public class BuildType {
 	@Column(name = "updated_at")
 	@UpdateTimestamp
 	private LocalDateTime updatedAt;
+
+	@OneToMany(mappedBy = "type", fetch = FetchType.LAZY)
+	private List<CrawledInfo> crawledInfo;
 
 	public BuildType() {
 		// TODO Auto-generated constructor stub
@@ -88,6 +94,14 @@ public class BuildType {
 
 	public void setUpdatedAt(LocalDateTime updatedAt) {
 		this.updatedAt = updatedAt;
+	}
+
+	public List<CrawledInfo> getCrawledInfo() {
+		return crawledInfo;
+	}
+
+	public void setCrawledInfo(List<CrawledInfo> crawledInfo) {
+		this.crawledInfo = crawledInfo;
 	}
 
 	@Override

@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
+import app.entity.BuildType;
+import app.entity.ResidenceType;
 import app.enumerated.CurrencyEnum;
 import app.enumerated.RequestTypeEnum;
 
@@ -15,13 +17,13 @@ public abstract class AnalyzeContent {
 	protected String description;
 	protected String keywords;
 	protected String region;
-	protected String type;
+	protected ResidenceType type;
 	protected CurrencyEnum currency;
 	protected BigDecimal price;
 	protected BigDecimal pricePerSquare;
 	protected short size;
 	protected byte floor;
-	protected String buildType;
+	protected BuildType buildType;
 	protected String buildAt;
 	protected List<String> images;
 
@@ -51,7 +53,7 @@ public abstract class AnalyzeContent {
 		return region;
 	}
 
-	public String getType() {
+	public ResidenceType getType() {
 		return type;
 	}
 
@@ -75,7 +77,7 @@ public abstract class AnalyzeContent {
 		return floor;
 	}
 
-	public String getBuildType() {
+	public BuildType getBuildType() {
 		return buildType;
 	}
 
@@ -87,12 +89,46 @@ public abstract class AnalyzeContent {
 		return images;
 	}
 
+	/**
+	 * Convert String to request type or throw exception if not found
+	 * 
+	 * @param string
+	 * @return
+	 * @throws Exception
+	 */
 	public RequestTypeEnum getRequestTypeEnum(String string) throws Exception {
 		return RequestTypeEnum.valueOf(string.toUpperCase());
 	}
 
+	/**
+	 * Convert String to currency or throw exception if not found
+	 * 
+	 * @param string
+	 * @return
+	 * @throws Exception
+	 */
 	public CurrencyEnum getCurrencyEnum(String string) throws Exception {
 		return CurrencyEnum.valueOf(string.toUpperCase());
+	}
+
+	/**
+	 * Convert String to RecidenceType or return null
+	 * 
+	 * @param string
+	 * @return ResidenceType
+	 */
+	public ResidenceType convertStringToResidenceType(String string) {
+		return null;
+	}
+
+	/**
+	 * Convert String to BuildType or return null
+	 * 
+	 * @param string
+	 * @return BuildType
+	 */
+	public BuildType convertStringToBuildType(String string) {
+		return null;
 	}
 
 	@Override

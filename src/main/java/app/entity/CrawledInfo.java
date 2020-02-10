@@ -8,6 +8,8 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
@@ -35,8 +37,6 @@ public class CrawledInfo {
 	// Mestopolojenie
 	private String region;
 
-	private String type;
-
 	@NotBlank
 	@Enumerated(EnumType.STRING)
 	private CurrencyEnum currency;
@@ -58,10 +58,6 @@ public class CrawledInfo {
 	@Min(value = 0)
 	private byte floor;
 
-	// Vid stroitelstvo [tuhla]
-	@Column(name = "build_type")
-	private String buildType;
-
 	// Godina na stroej
 	@Column(name = "build_at")
 	private String buildAt;
@@ -69,27 +65,35 @@ public class CrawledInfo {
 	@OneToOne(mappedBy = "crawledInfo", fetch = FetchType.LAZY)
 	private Crawled crawled;
 
+	@ManyToOne
+	@JoinColumn(name = "type")
+	private ResidenceType type;
+
+	@ManyToOne
+	@JoinColumn(name = "build_type")
+	private BuildType buildType;
+
 	public CrawledInfo() {
 		// TODO Auto-generated constructor stub
 	}
 
 	public CrawledInfo(@NotBlank @Size(min = 2) String title, String description, String keywords, String region,
-			String type, @NotBlank CurrencyEnum currency, @NotBlank @Min(0) BigDecimal price,
+			@NotBlank CurrencyEnum currency, @NotBlank @Min(0) BigDecimal price,
 			@NotBlank @Min(0) BigDecimal pricePerSquare, @NotBlank @Min(0) short size, @Min(0) byte floor,
-			String buildType, String buildAt) {
+			String buildAt, ResidenceType type, BuildType buildType) {
 		super();
 		this.title = title;
 		this.description = description;
 		this.keywords = keywords;
 		this.region = region;
-		this.type = type;
 		this.currency = currency;
 		this.price = price;
 		this.pricePerSquare = pricePerSquare;
 		this.size = size;
 		this.floor = floor;
-		this.buildType = buildType;
 		this.buildAt = buildAt;
+		this.type = type;
+		this.buildType = buildType;
 	}
 
 	public int getId() {
@@ -132,14 +136,6 @@ public class CrawledInfo {
 		this.region = region;
 	}
 
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
 	public CurrencyEnum getCurrency() {
 		return currency;
 	}
@@ -180,14 +176,6 @@ public class CrawledInfo {
 		this.floor = floor;
 	}
 
-	public String getBuildType() {
-		return buildType;
-	}
-
-	public void setBuildType(String buildType) {
-		this.buildType = buildType;
-	}
-
 	public String getBuildAt() {
 		return buildAt;
 	}
@@ -204,12 +192,27 @@ public class CrawledInfo {
 		this.crawled = crawled;
 	}
 
+	public ResidenceType getType() {
+		return type;
+	}
+
+	public void setType(ResidenceType type) {
+		this.type = type;
+	}
+
+	public BuildType getBuildType() {
+		return buildType;
+	}
+
+	public void setBuildType(BuildType buildType) {
+		this.buildType = buildType;
+	}
+
 	@Override
 	public String toString() {
 		return "CrawledInfo [id=" + id + ", title=" + title + ", description=" + description + ", keywords=" + keywords
-				+ ", region=" + region + ", type=" + type + ", currency=" + currency + ", price=" + price
-				+ ", pricePerSquare=" + pricePerSquare + ", size=" + size + ", floor=" + floor + ", buildType="
-				+ buildType + ", buildAt=" + buildAt + "]";
+				+ ", region=" + region + ", currency=" + currency + ", price=" + price + ", pricePerSquare="
+				+ pricePerSquare + ", size=" + size + ", floor=" + floor + ", buildAt=" + buildAt + "]";
 	}
 
 }

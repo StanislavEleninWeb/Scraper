@@ -129,7 +129,7 @@ public class AnalyzeContentOlxBg extends AnalyzeContent {
 	}
 
 	protected void setType(HtmlElement container) throws Exception {
-		type = container.getTextContent().trim();
+		type = convertStringToResidenceType(container.getTextContent().trim());
 	}
 
 	protected void setFloor(HtmlElement container) throws Exception {
@@ -151,7 +151,7 @@ public class AnalyzeContentOlxBg extends AnalyzeContent {
 	}
 
 	protected void setBuildType(HtmlElement container) throws Exception {
-		buildType = container.getTextContent().trim();
+		buildType = convertStringToBuildType(container.getTextContent().trim());
 	}
 
 	protected void setBuildAt(HtmlElement container) throws Exception {

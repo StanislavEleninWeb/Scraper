@@ -14,7 +14,8 @@ public class CrawledUrlValidator implements ConstraintValidator<CrawledUrl, Stri
 
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext context) {
-		return value != null && !crawledService.isCrawledUrlAlreadySaved(value);
+//		return value != null && !crawledService.isCrawledUrlAlreadySaved(value);
+		return true;
 	}
 
 }

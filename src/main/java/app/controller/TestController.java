@@ -1,9 +1,13 @@
 package app.controller;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,9 +19,20 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import app.entity.BuildType;
+import app.entity.Crawled;
+import app.entity.CrawledImage;
+import app.entity.CrawledInfo;
+import app.entity.CrawledRating;
+import app.entity.ResidenceType;
 import app.entity.Source;
+import app.enumerated.CurrencyEnum;
 import app.scraper.ContentScraper;
 import app.scraper.analyze.AnalyzeContent;
+import app.scraper.analyze.AnalyzeRating;
+import app.service.BuildTypeService;
+import app.service.CrawledService;
+import app.service.ResidenceTypeService;
 import app.service.SourceService;
 
 @Controller
@@ -26,6 +41,17 @@ public class TestController {
 
 	@Autowired
 	private SourceService sourceService;
+
+	@Autowired
+	private CrawledService crawledService;
+	
+	@Autowired
+	private ResidenceTypeService residenceTypeService;
+	
+	@Autowired
+	private BuildTypeService buildTypeService;
+
+	Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@GetMapping
 	@ResponseBody
@@ -65,41 +91,82 @@ public class TestController {
 	@ResponseBody
 	public String contentScraper() {
 
-		String link = "https://www.olx.bg/ad/tristaen-v-kyuchuk-parizh-CID368-ID7khdh.html#217d944456";
+		String link = "https://www.olx.bg/ad/tristaen-apartament-v-kv-karshiyaka-CID368-ID85TKH.html#374e599dda";
 
 		Source source = sourceService.getOne(2);
 
-		// Scrape content
-		ContentScraper contentScraper = null;
-		try {
-			contentScraper = new ContentScraper(link);
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		if (contentScraper.getPage() == null) {
-			System.out.println("Failed to fetch page " + link);
-		}
+//		// Scrape content
+//		ContentScraper contentScraper = null;
+//		try {
+//			contentScraper = new ContentScraper(link);
+//		} catch (Exception e) {
+//			logger.info("Failed to fetch page " + link);
+//			logger.error(e.getMessage());
+//		}
 
-		AnalyzeContent analyzeContent = null;
-		try {
-			analyzeContent = (AnalyzeContent) Class.forName(source.getSourceGenerator().getContentAnalyzer())
-					.newInstance();
-		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+//		// Instance of AnalyzeContent class
+//		AnalyzeContent analyzeContent = null;
+//		try {
+//			analyzeContent = (AnalyzeContent) Class.forName(source.getSourceGenerator().getContentAnalyzer())
+//					.newInstance();
+//		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+//			logger.error("No such analyze class found! ");
+//			logger.error(e.getMessage());
+//		}
+//
+//		// Check for page content and analyze
+//		if (contentScraper.getPage() == null) {
+//			logger.error("Not found page content for address " + link);
+//		}
+//		analyzeContent.setHtml(contentScraper.getPage());
+//
+//		try {
+//			analyzeContent.analyze();
+//		} catch (Exception e) {
+//			logger.error("Failed to analyze page content for address " + link);
+//			logger.error(e.getMessage());
+//		}
 
-		analyzeContent.setHtml(contentScraper.getPage());
-		try {
-			analyzeContent.analyze();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		// Crawl url address and return CrawledInfo object
+//		CrawledInfo crawledInfo = new CrawledInfo(analyzeContent.getTitle(), analyzeContent.getDescription(),
+//				analyzeContent.getKeywords(), analyzeContent.getRegion(), analyzeContent.getCurrency(),
+//				analyzeContent.getPrice(), analyzeContent.getPricePerSquare(), analyzeContent.getSize(),
+//				analyzeContent.getFloor(), analyzeContent.getBuildAt(), analyzeContent.getType(),
+//				analyzeContent.getBuildType());
+//
+//		System.err.println(crawledInfo);
+//
+//		// Rating
+//		CrawledRating crawledRating = new AnalyzeRating(crawledInfo).getCrawledRating();
+//
+//		// Images
+//		List<CrawledImage> crawledImages = null;
+//		if (analyzeContent.getImages() != null) {
+//			crawledImages = null;
+//		}
+		
+		ResidenceType type = residenceTypeService.findById(1);
+		BuildType buildType = buildTypeService.findById(1);
+		
+		BigDecimal price = new BigDecimal("44000");
+		BigDecimal pricePerSquare = new BigDecimal("440");
+		Short size = new Short("100");
+		Byte floor = new Byte("4");
+		
+		CrawledInfo crawledInfo = new CrawledInfo("title", "description", "keywords", "region", CurrencyEnum.EUR, price, pricePerSquare, size, floor, "buildAt", null, null);
 
-		System.err.println(analyzeContent);
+		CrawledRating crawledRating = new CrawledRating(new Double("5"), new Double("5"), new Double("5"), new Double(5));
+		System.err.println(crawledRating);
+		// Save Crawled, Crawled, Rating
+		Crawled crawled = new Crawled(link);
+		crawled.setSource(source);
+//		crawled.setCrawledInfo(crawledInfo);
+		crawled.setCrawledRating(crawledRating);
+//		crawled.setCrawledImages(crawledImages);
 
-		return analyzeContent.toString();
+		crawledService.save(crawled);
+
+		return null;
 	}
 
 	@GetMapping("/regex")
@@ -112,8 +179,8 @@ public class TestController {
 		Pattern pattern = Pattern.compile(regex, Pattern.UNICODE_CASE | Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
 
 		System.err.println(pattern.pattern());
-		
-		str = str.replaceAll("&"+"nbsp;", " "); 
+
+		str = str.replaceAll("&" + "nbsp;", " ");
 		str = str.replaceAll(String.valueOf((char) 160), " ");
 
 		Matcher matcher = pattern.matcher(str);
