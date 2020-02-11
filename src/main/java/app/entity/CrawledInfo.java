@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
@@ -37,21 +38,17 @@ public class CrawledInfo {
 	// Mestopolojenie
 	private String region;
 
-	@NotBlank
 	@Enumerated(EnumType.STRING)
 	private CurrencyEnum currency;
 
-	@NotBlank
 	@Min(value = 0)
 	private BigDecimal price;
 
-	@NotBlank
 	@Min(value = 0)
 	@Column(name = "price_per_square")
 	private BigDecimal pricePerSquare;
 
 	// Kvadratura
-	@NotBlank
 	@Min(value = 0)
 	private short size;
 
@@ -62,7 +59,8 @@ public class CrawledInfo {
 	@Column(name = "build_at")
 	private String buildAt;
 
-	@OneToOne(mappedBy = "crawledInfo", fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
+	@MapsId
 	private Crawled crawled;
 
 	@ManyToOne
@@ -78,9 +76,8 @@ public class CrawledInfo {
 	}
 
 	public CrawledInfo(@NotBlank @Size(min = 2) String title, String description, String keywords, String region,
-			@NotBlank CurrencyEnum currency, @NotBlank @Min(0) BigDecimal price,
-			@NotBlank @Min(0) BigDecimal pricePerSquare, @NotBlank @Min(0) short size, @Min(0) byte floor,
-			String buildAt, ResidenceType type, BuildType buildType) {
+			CurrencyEnum currency, @Min(0) BigDecimal price, @Min(0) BigDecimal pricePerSquare, @Min(0) short size,
+			@Min(0) byte floor, String buildAt, ResidenceType type, BuildType buildType) {
 		super();
 		this.title = title;
 		this.description = description;

@@ -7,10 +7,10 @@ import app.entity.CrawledRating;
 
 public class AnalyzeRating {
 
-	private float avg;
-	private float price;
-	private float pricePerSquare;
-	private float size;
+	private double avg;
+	private double price;
+	private double pricePerSquare;
+	private double size;
 
 	public AnalyzeRating(CrawledInfo crawledInfo) {
 		calculatePriceRating(crawledInfo.getPrice());

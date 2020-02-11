@@ -1,7 +1,8 @@
 package app.scraper;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,10 +37,10 @@ public class LinksScraper {
 		this.regex = regex;
 	}
 
-	public List<String> getLinks() throws Exception {
+	public Set<String> getLinks() throws Exception {
 
-		List<String> links = new ArrayList<String>();
-
+		Set<String> links = new HashSet<String>();
+ 
 		WebClient client = new WebClient(BrowserVersion.CHROME);
 
 		client.getOptions().setCssEnabled(false);

@@ -2,7 +2,7 @@ package app.controller;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,15 +21,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import app.entity.BuildType;
 import app.entity.Crawled;
-import app.entity.CrawledImage;
 import app.entity.CrawledInfo;
 import app.entity.CrawledRating;
 import app.entity.ResidenceType;
 import app.entity.Source;
 import app.enumerated.CurrencyEnum;
-import app.scraper.ContentScraper;
-import app.scraper.analyze.AnalyzeContent;
-import app.scraper.analyze.AnalyzeRating;
+import app.scraper.LinksScraper;
 import app.service.BuildTypeService;
 import app.service.CrawledService;
 import app.service.ResidenceTypeService;
@@ -44,10 +41,10 @@ public class TestController {
 
 	@Autowired
 	private CrawledService crawledService;
-	
+
 	@Autowired
 	private ResidenceTypeService residenceTypeService;
-	
+
 	@Autowired
 	private BuildTypeService buildTypeService;
 
@@ -94,6 +91,8 @@ public class TestController {
 		String link = "https://www.olx.bg/ad/tristaen-apartament-v-kv-karshiyaka-CID368-ID85TKH.html#374e599dda";
 
 		Source source = sourceService.getOne(2);
+
+		System.err.println(crawledService.isCrawledUrlAlreadySaved(link));
 
 //		// Scrape content
 //		ContentScraper contentScraper = null;
@@ -144,24 +143,32 @@ public class TestController {
 //		if (analyzeContent.getImages() != null) {
 //			crawledImages = null;
 //		}
-		
+
 		ResidenceType type = residenceTypeService.findById(1);
 		BuildType buildType = buildTypeService.findById(1);
-		
+
 		BigDecimal price = new BigDecimal("44000");
 		BigDecimal pricePerSquare = new BigDecimal("440");
 		Short size = new Short("100");
 		Byte floor = new Byte("4");
-		
-		CrawledInfo crawledInfo = new CrawledInfo("title", "description", "keywords", "region", CurrencyEnum.EUR, price, pricePerSquare, size, floor, "buildAt", null, null);
 
-		CrawledRating crawledRating = new CrawledRating(new Double("5"), new Double("5"), new Double("5"), new Double(5));
-		System.err.println(crawledRating);
+		CrawledInfo crawledInfo = new CrawledInfo("title", "description", "keywords", "region", CurrencyEnum.EUR, price,
+				pricePerSquare, size, floor, "build At", type, buildType);
+
+		CrawledRating crawledRating = new CrawledRating(new Double("5"), new Double("5"), new Double("5"),
+				new Double(5));
+
 		// Save Crawled, Crawled, Rating
 		Crawled crawled = new Crawled(link);
+
 		crawled.setSource(source);
-//		crawled.setCrawledInfo(crawledInfo);
+
+		crawled.setCrawledInfo(crawledInfo);
+		crawledInfo.setCrawled(crawled);
+
 		crawled.setCrawledRating(crawledRating);
+		crawledRating.setCrawled(crawled);
+
 //		crawled.setCrawledImages(crawledImages);
 
 		crawledService.save(crawled);
@@ -197,6 +204,50 @@ public class TestController {
 //			System.err.println(matcher.group());
 //		}
 
+		return null;
+	}
+
+	@GetMapping("/regex/olx")
+	@ResponseBody
+	public String regexOlx() {
+
+		String url = "https://www.olx.bg/nedvizhimi-imoti/prodazhbi/apartamenti/plovdiv/?search%5Bfilter_enum_atype%5D%5B0%5D=3&search%5Bfilter_enum_atype%5D%5B1%5D=4&search%5Bfilter_enum_atype%5D%5B2%5D=mnogostaen&search%5Bfilter_enum_atype%5D%5B3%5D=mezonet&search%5Bdescription%5D=1";
+		String regex = "//div[@class=\"content\"]//div[@class=\"offer-wrapper\"]//a/@href";
+
+		LinksScraper scraper = new LinksScraper();
+
+		scraper.setUrl(url);
+		scraper.setRegex(regex);
+
+		try {
+			Set<String> listLinks = scraper.getLinks();
+			System.err.println(listLinks.size());
+			for (String link : listLinks) {
+				System.err.println(link);
+			}
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	@GetMapping("/for/try")
+	@ResponseBody
+	public String forTry() {
+		String[] string = { "Volvo", "BMW", "Ford", "Mazda" };
+		for (String str : string) {
+			
+			try {
+				throw new NumberFormatException();
+			} catch (Exception e) {
+				System.err.println(e.getMessage());
+				continue;
+			}
+			
+		}
 		return null;
 	}
 

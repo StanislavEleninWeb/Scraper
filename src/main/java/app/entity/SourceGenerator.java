@@ -22,7 +22,6 @@ public class SourceGenerator {
 	@Column(name = "source_id", nullable = false)
 	private int id;
 
-	@NotBlank
 	@Enumerated(EnumType.STRING)
 	private RequestTypeEnum type;
 

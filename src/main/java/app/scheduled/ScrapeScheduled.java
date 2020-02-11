@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.text.AbstractDocument.Content;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +21,6 @@ import org.springframework.stereotype.Component;
 import app.entity.Crawled;
 import app.entity.CrawledImage;
 import app.entity.CrawledInfo;
-import app.entity.CrawledRating;
 import app.entity.Source;
 import app.enumerated.RequestTypeEnum;
 import app.scraper.ContentScraper;
@@ -33,8 +30,8 @@ import app.scraper.analyze.AnalyzeRating;
 import app.service.CrawledService;
 import app.service.SourceService;
 
-//@Component
-//@EnableAsync
+@Component
+@EnableAsync
 public class ScrapeScheduled {
 
 	Logger logger = LoggerFactory.getLogger(getClass());
@@ -127,40 +124,38 @@ public class ScrapeScheduled {
 					logger.error(e.getMessage());
 					continue;
 				}
+				
+				System.err.println("After Analyze Error");
 
-				// Crawl url address and return CrawledInfo object
-				CrawledInfo crawledInfo = new CrawledInfo(
-						analyzeContent.getTitle(), 
-						analyzeContent.getDescription(), 
-						analyzeContent.getKeywords(), 
-						analyzeContent.getRegion(), 
-						analyzeContent.getCurrency(), 
-						analyzeContent.getPrice(), 
-						analyzeContent.getPricePerSquare(), 
-						analyzeContent.getSize(), 
-						analyzeContent.getFloor(), 
-						analyzeContent.getBuildAt(), 
-						analyzeContent.getType(), 
-						analyzeContent.getBuildType()
-						);
+				CrawledInfo crawledInfo;
+				try {
+					// Crawl url address and return CrawledInfo object
+					crawledInfo = new CrawledInfo(analyzeContent.getTitle(), analyzeContent.getDescription(),
+							analyzeContent.getKeywords(), analyzeContent.getRegion(), analyzeContent.getCurrency(),
+							analyzeContent.getPrice(), analyzeContent.getPricePerSquare(), analyzeContent.getSize(),
+							analyzeContent.getFloor(), analyzeContent.getBuildAt(), analyzeContent.getType(),
+							analyzeContent.getBuildType());
+				} catch (Exception e) {
+					logger.error("Creating CrawledInfo Error : " + e.getMessage());
+					continue;
+				}
 
-				System.err.println(crawledInfo);
+				// Save Crawled, Crawled, Rating
+				Crawled crawled = new Crawled(link);
 
-				// Rating
-				CrawledRating crawledRating = new AnalyzeRating(crawledInfo).getCrawledRating();
+				crawled.setCrawledInfo(crawledInfo); // OneToOne relation
+				crawledInfo.setCrawled(crawled); // OneToOne relation
+
+				crawled.setCrawledRating(new AnalyzeRating(crawledInfo).getCrawledRating());
 
 				// Images
 				List<CrawledImage> crawledImages = null;
 				if (analyzeContent.getImages() != null) {
 					crawledImages = processImages(analyzeContent.getImages());
 				}
-
-				// Save Crawled, Crawled, Rating
-				Crawled crawled = new Crawled(link);
-				crawled.setCrawledInfo(crawledInfo);
-				crawled.setCrawledRating(crawledRating);
 				crawled.setCrawledImages(crawledImages);
 
+				// Save
 				crawledService.save(crawled);
 
 				break;

@@ -54,8 +54,6 @@ public class SourceGeneratorController {
 	@PostMapping("/save")
 	public String save(@Valid @ModelAttribute("sourceGenerator") SourceGenerator sourceGenerator,
 			BindingResult bindingResult) {
-
-		System.err.println(sourceGenerator);
 		
 		if (!sourceService.existsById(sourceGenerator.getId()))
 			return "redirect:/source";

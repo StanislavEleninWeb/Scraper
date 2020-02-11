@@ -16,15 +16,12 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.URL;
-
-import app.validation.CrawledUrl;
 
 @Entity
 @Table(name = "crawled")
@@ -37,7 +34,7 @@ public class Crawled {
 
 	@NotBlank
 	@URL
-	@CrawledUrl
+//	@CrawledUrl // Not working autowired CrawledService in CrawledUrlValidator
 	@Column(name = "url")
 	private String url;
 
@@ -53,12 +50,10 @@ public class Crawled {
 	@JoinColumn(name = "source_id")
 	private Source source;
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@PrimaryKeyJoinColumn
+	@OneToOne(mappedBy = "crawled", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
 	private CrawledInfo crawledInfo;
 
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@PrimaryKeyJoinColumn
+	@OneToOne(mappedBy = "crawled", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
 	private CrawledRating crawledRating;
 
 	@OneToMany(mappedBy = "crawled", fetch = FetchType.LAZY)
