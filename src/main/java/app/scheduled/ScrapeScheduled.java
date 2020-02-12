@@ -44,8 +44,8 @@ public class ScrapeScheduled {
 	@Autowired
 	private CrawledService crawledService;
 
-	@Async
-	@Scheduled(fixedRate = 3600000)
+//	@Async
+//	@Scheduled(fixedRate = 3600000)
 	public void scheduledDeadlineTaskCheck() throws InterruptedByTimeoutException {
 
 		// Start Report

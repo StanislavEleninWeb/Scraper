@@ -234,21 +234,4 @@ public class TestController {
 		return null;
 	}
 
-	@GetMapping("/for/try")
-	@ResponseBody
-	public String forTry() {
-		String[] string = { "Volvo", "BMW", "Ford", "Mazda" };
-		for (String str : string) {
-			
-			try {
-				throw new NumberFormatException();
-			} catch (Exception e) {
-				System.err.println(e.getMessage());
-				continue;
-			}
-			
-		}
-		return null;
-	}
-
 }
