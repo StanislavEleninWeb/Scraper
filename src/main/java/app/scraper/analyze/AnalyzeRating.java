@@ -36,14 +36,7 @@ public class AnalyzeRating {
 	}
 
 	public CrawledRating getCrawledRating() {
-		CrawledRating rating = new CrawledRating();
-
-		rating.setPrice(price);
-		rating.setPricePerSquare(pricePerSquare);
-		rating.setSize(size);
-		rating.setAvg(avg);
-
-		return rating;
+		return new CrawledRating(avg, price, pricePerSquare, size);
 	}
 
 }

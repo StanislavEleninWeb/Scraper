@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,7 +26,7 @@ public class CrawledImage {
 	private int id;
 
 	@NotBlank
-	@Size(min = 60, max = 60)
+	@Size(min = 6, max = 60)
 	private String filename;
 
 	@NotBlank
@@ -36,7 +37,7 @@ public class CrawledImage {
 	@Column(name = "created_at", updatable = false)
 	private LocalDateTime createdAt;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "crawled_id", nullable = false)
 	private Crawled crawled;
 
@@ -44,12 +45,11 @@ public class CrawledImage {
 		// TODO Auto-generated constructor stub
 	}
 
-	public CrawledImage(@NotBlank @Size(min = 60, max = 60) String filename,
-			@NotBlank @Size(min = 2, max = 4) String ext, LocalDateTime createdAt) {
+	public CrawledImage(@NotBlank @Size(min = 6, max = 60) String filename,
+			@NotBlank @Size(min = 2, max = 4) String ext) {
 		super();
 		this.filename = filename;
 		this.ext = ext;
-		this.createdAt = createdAt;
 	}
 
 	public int getId() {

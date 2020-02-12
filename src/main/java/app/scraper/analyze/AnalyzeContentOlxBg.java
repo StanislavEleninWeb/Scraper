@@ -1,7 +1,7 @@
 package app.scraper.analyze;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -162,7 +162,7 @@ public class AnalyzeContentOlxBg extends AnalyzeContent {
 		List<DomAttr> imagesList = container
 				.getByXPath(".//div[contains(@class, 'img-item')]//div[@class=\"photo-glow\"]//img/@src");
 
-		images = new ArrayList<String>();
+		images = new HashSet<String>();
 		if (!imagesList.isEmpty()) {
 			for (DomAttr image : imagesList) {
 				images.add(image.getValue());

@@ -1,7 +1,7 @@
 package app.scraper.analyze;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Set;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
@@ -25,7 +25,7 @@ public abstract class AnalyzeContent {
 	protected byte floor;
 	protected BuildType buildType;
 	protected String buildAt;
-	protected List<String> images;
+	protected Set<String> images;
 
 	public abstract void analyze() throws Exception;
 
@@ -85,7 +85,7 @@ public abstract class AnalyzeContent {
 		return buildAt;
 	}
 
-	public List<String> getImages() {
+	public Set<String> getImages() {
 		return images;
 	}
 

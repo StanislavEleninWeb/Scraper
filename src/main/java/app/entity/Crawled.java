@@ -1,7 +1,7 @@
 package app.entity;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -56,12 +56,12 @@ public class Crawled {
 	@OneToOne(mappedBy = "crawled", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
 	private CrawledRating crawledRating;
 
-	@OneToMany(mappedBy = "crawled", fetch = FetchType.LAZY)
-	private List<CrawledImage> crawledImages;
+	@OneToMany(mappedBy = "crawled", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Set<CrawledImage> crawledImages;
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "course_student", joinColumns = @JoinColumn(name = "crawled_id"), inverseJoinColumns = @JoinColumn(name = "contact_id"))
-	private List<Contact> contacts;
+	private Set<Contact> contacts;
 
 	public Crawled() {
 		// TODO Auto-generated constructor stub
@@ -128,19 +128,19 @@ public class Crawled {
 		this.crawledRating = crawledRating;
 	}
 
-	public List<CrawledImage> getCrawledImages() {
+	public Set<CrawledImage> getCrawledImages() {
 		return crawledImages;
 	}
 
-	public void setCrawledImages(List<CrawledImage> crawledImages) {
+	public void setCrawledImages(Set<CrawledImage> crawledImages) {
 		this.crawledImages = crawledImages;
 	}
 
-	public List<Contact> getContacts() {
+	public Set<Contact> getContacts() {
 		return contacts;
 	}
 
-	public void setContacts(List<Contact> contacts) {
+	public void setContacts(Set<Contact> contacts) {
 		this.contacts = contacts;
 	}
 

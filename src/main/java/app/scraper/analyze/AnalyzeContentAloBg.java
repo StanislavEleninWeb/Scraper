@@ -1,9 +1,7 @@
 package app.scraper.analyze;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.gargoylesoftware.htmlunit.html.DomAttr;
 import com.gargoylesoftware.htmlunit.html.HtmlDivision;
@@ -149,7 +147,7 @@ public class AnalyzeContentAloBg extends AnalyzeContent {
 	protected void setBuildAt(HtmlElement container) throws Exception {
 		List<DomAttr> responseImages = html.getByXPath(".//div[@class=\"images\"]//img/@src");
 
-		images = new ArrayList<String>();
+		images = new HashSet<String>();
 		if (!responseImages.isEmpty()) {
 			for (DomAttr responseImage : responseImages) {
 				images.add(responseImage.getValue());

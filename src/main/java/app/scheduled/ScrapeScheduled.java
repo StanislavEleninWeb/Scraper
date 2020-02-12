@@ -4,10 +4,11 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.channels.InterruptedByTimeoutException;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Component;
 import app.entity.Crawled;
 import app.entity.CrawledImage;
 import app.entity.CrawledInfo;
+import app.entity.CrawledRating;
 import app.entity.Source;
 import app.enumerated.RequestTypeEnum;
 import app.scraper.ContentScraper;
@@ -42,8 +44,8 @@ public class ScrapeScheduled {
 	@Autowired
 	private CrawledService crawledService;
 
-//	@Async
-//	@Scheduled(fixedRate = 3600000)
+	@Async
+	@Scheduled(fixedRate = 3600000)
 	public void scheduledDeadlineTaskCheck() throws InterruptedByTimeoutException {
 
 		// Start Report
@@ -69,7 +71,7 @@ public class ScrapeScheduled {
 			}
 
 			// Get Source links as String
-			List<String> links = getAllLinks(source);
+			Set<String> links = getAllLinks(source);
 			if (links == null) {
 				logger.error("No links found for source " + source);
 				continue;
@@ -120,12 +122,9 @@ public class ScrapeScheduled {
 				try {
 					analyzeContent.analyze();
 				} catch (Exception e) {
-					logger.error("Failed to analyze page content for address " + link);
-					logger.error(e.getMessage());
+					logger.error("Failed to analyze page content for address " + link + " Message " + e.getMessage());
 					continue;
 				}
-				
-				System.err.println("After Analyze Error");
 
 				CrawledInfo crawledInfo;
 				try {
@@ -136,22 +135,33 @@ public class ScrapeScheduled {
 							analyzeContent.getFloor(), analyzeContent.getBuildAt(), analyzeContent.getType(),
 							analyzeContent.getBuildType());
 				} catch (Exception e) {
-					logger.error("Creating CrawledInfo Error : " + e.getMessage());
+					logger.error("Creating Info Error : " + e.getMessage());
+					continue;
+				}
+
+				CrawledRating crawledRating;
+				try {
+					crawledRating = new AnalyzeRating(crawledInfo).getCrawledRating();
+				} catch (Exception e) {
+					logger.error("Creating Rating Error : " + e.getMessage());
 					continue;
 				}
 
 				// Save Crawled, Crawled, Rating
 				Crawled crawled = new Crawled(link);
 
+				crawled.setSource(source);
+
 				crawled.setCrawledInfo(crawledInfo); // OneToOne relation
 				crawledInfo.setCrawled(crawled); // OneToOne relation
 
-				crawled.setCrawledRating(new AnalyzeRating(crawledInfo).getCrawledRating());
+				crawled.setCrawledRating(crawledRating);
+				crawledRating.setCrawled(crawled);
 
 				// Images
-				List<CrawledImage> crawledImages = null;
+				Set<CrawledImage> crawledImages = null;
 				if (analyzeContent.getImages() != null) {
-					crawledImages = processImages(analyzeContent.getImages());
+					crawledImages = processImages(crawled, analyzeContent.getImages());
 				}
 				crawled.setCrawledImages(crawledImages);
 
@@ -183,7 +193,7 @@ public class ScrapeScheduled {
 	 * @param source
 	 * @return List<String>
 	 */
-	private List<String> getAllLinks(Source source) {
+	private Set<String> getAllLinks(Source source) {
 
 		String url = null;
 		String regex = null;
@@ -192,7 +202,7 @@ public class ScrapeScheduled {
 		LinksScraper linksScraper = new LinksScraper();
 
 		// Create empty list
-		List<String> links = new ArrayList<String>();
+		Set<String> links = new HashSet<String>();
 
 		if (source.getSourceGenerator().getType() == RequestTypeEnum.GET) {
 			url = source.getSourceGenerator().getUrl();
@@ -227,8 +237,20 @@ public class ScrapeScheduled {
 	 * @param images
 	 * @return List<CrawledImage>
 	 */
-	private List<CrawledImage> processImages(List<String> images) {
-		return null;
+	private Set<CrawledImage> processImages(Crawled crawled, Set<String> images) {
+
+		Set<CrawledImage> processedImages = new HashSet<CrawledImage>();
+
+		CrawledImage img1 = new CrawledImage("asdasdasdasdasd", "jpeg");
+		img1.setCrawled(crawled);
+
+		CrawledImage img2 = new CrawledImage("bbbbbbbbbbbbb", "jpeg");
+		img2.setCrawled(crawled);
+
+		processedImages.add(img1);
+		processedImages.add(img2);
+
+		return processedImages;
 	}
 
 	/**
