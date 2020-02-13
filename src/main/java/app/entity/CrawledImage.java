@@ -26,6 +26,9 @@ public class CrawledImage {
 	private int id;
 
 	@NotBlank
+	private String path;
+
+	@NotBlank
 	@Size(min = 6, max = 60)
 	private String filename;
 
@@ -45,9 +48,10 @@ public class CrawledImage {
 		// TODO Auto-generated constructor stub
 	}
 
-	public CrawledImage(@NotBlank @Size(min = 6, max = 60) String filename,
+	public CrawledImage(@NotBlank String path, @NotBlank @Size(min = 6, max = 60) String filename,
 			@NotBlank @Size(min = 2, max = 4) String ext) {
 		super();
+		this.path = path;
 		this.filename = filename;
 		this.ext = ext;
 	}
@@ -58,6 +62,14 @@ public class CrawledImage {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	public String getFilename() {
@@ -94,7 +106,8 @@ public class CrawledImage {
 
 	@Override
 	public String toString() {
-		return "CrawledImage [id=" + id + ", filename=" + filename + ", ext=" + ext + ", createdAt=" + createdAt + "]";
+		return "CrawledImage [id=" + id + ", path=" + path + ", filename=" + filename + ", ext=" + ext + ", createdAt="
+				+ createdAt + "]";
 	}
 
 }
