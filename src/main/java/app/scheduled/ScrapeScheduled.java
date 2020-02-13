@@ -1,9 +1,16 @@
 package app.scheduled;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.channels.InterruptedByTimeoutException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -11,12 +18,16 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import javax.imageio.ImageIO;
+
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 
 import app.entity.Crawled;
@@ -232,25 +243,100 @@ public class ScrapeScheduled {
 	}
 
 	/**
-	 * Iterate over List<String> of images and process images.
+	 * Iterate over Set<String> of images and process images.
 	 * 
 	 * @param images
-	 * @return List<CrawledImage>
+	 * @return Set<CrawledImage>
 	 */
 	private Set<CrawledImage> processImages(Crawled crawled, Set<String> images) {
 
+		// Set processed images
 		Set<CrawledImage> processedImages = new HashSet<CrawledImage>();
 
-		CrawledImage img1 = new CrawledImage("asdasdasdasdasd", "jpeg");
-		img1.setCrawled(crawled);
+		// Set images path
+		String path = "./src/main/resources/images/" + crawled.getId() + "/";
 
-		CrawledImage img2 = new CrawledImage("bbbbbbbbbbbbb", "jpeg");
-		img2.setCrawled(crawled);
+		for (String address : images) {
 
-		processedImages.add(img1);
-		processedImages.add(img2);
+			// Check if image address is valid url
+			if (!isValidUrl(address))
+				continue;
+
+			// Download image
+			BufferedImageWrapper image = null;
+			try {
+				image = saveImage(address, path);
+			} catch (IOException e) {
+				e.printStackTrace();
+				continue;
+			}
+
+			// Create Image class
+			processedImages.add(new CrawledImage(image.getPath(), image.getFilename(), image.getExt()));
+		}
 
 		return processedImages;
+	}
+
+	/**
+	 * 
+	 * @param address
+	 * @param destination
+	 * @throws IOException
+	 * @throws MalformedURLException
+	 * @throws URISyntaxException
+	 */
+//	private void saveImage(String address, String destination)
+//			throws IOException, MalformedURLException, URISyntaxException {
+//
+//		URL url = new URL(address);
+//
+//		InputStream is = url.openStream();
+//		OutputStream os = new FileOutputStream(destination);
+//
+//		byte[] b = new byte[2048];
+//		int length;
+//
+//		while ((length = is.read(b)) != -1) {
+//			os.write(b, 0, length);
+//		}
+//
+//		is.close();
+//		os.close();
+//	}
+
+	private BufferedImageWrapper saveImage(String address, String path) throws IOException {
+
+		// Image valid url address
+		URL url = new URL(address);
+
+		// Generate random filename
+		String filename = BCrypt.hashpw(String.valueOf(System.currentTimeMillis()), BCrypt.gensalt()).replaceAll("[./]",
+				"1");
+
+		// Get ImageIO mime types as list
+		List<String> mimeTypes = Arrays.asList(ImageIO.getReaderMIMETypes());
+
+		// Get current image mime type
+		String mimeType = url.openConnection().getHeaderField("Content-Type");
+
+		// Check if valid image mime type
+		if (!mimeTypes.contains(mimeType))
+			throw new IOException("Mime type not valid!");
+
+		// Set ext of current image
+		String ext = mimeType.substring(mimeType.lastIndexOf("/") + 1, mimeType.length());
+
+		// Open buffered input stream
+		BufferedInputStream bis = new BufferedInputStream(url.openStream());
+
+		// Copy file to destination
+		FileUtils.copyInputStreamToFile(bis, new File(path + filename + "." + ext));
+
+		// Close buffered input stream
+		bis.close();
+
+		return new BufferedImageWrapper(path, filename, ext);
 	}
 
 	/**
@@ -306,6 +392,38 @@ public class ScrapeScheduled {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Local class handling image information
+	 * 
+	 * @author stanislav
+	 *
+	 */
+	class BufferedImageWrapper {
+
+		private String path;
+		private String filename;
+		private String ext;
+
+		public BufferedImageWrapper(String path, String filename, String ext) {
+			this.path = path;
+			this.filename = filename;
+			this.ext = ext;
+		}
+
+		public String getPath() {
+			return path;
+		}
+
+		public String getFilename() {
+			return filename;
+		}
+
+		public String getExt() {
+			return ext;
+		}
+
 	}
 
 }

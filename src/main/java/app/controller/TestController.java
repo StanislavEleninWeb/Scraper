@@ -1,14 +1,30 @@
 package app.controller;
 
+import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.net.FileNameMap;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.imageio.ImageIO;
+
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -232,6 +248,59 @@ public class TestController {
 		}
 
 		return null;
+	}
+
+	@GetMapping("/bcrypt")
+	@ResponseBody
+	public String bcrypt() {
+
+		long str = System.currentTimeMillis();
+
+		String string = BCrypt.hashpw(String.valueOf(str), BCrypt.gensalt());
+
+		System.err.println(string);
+		System.err.println(string.length());
+
+		return null;
+	}
+
+	@GetMapping("/image/save")
+	public String image() {
+
+		URL url = null;
+		String path = "./src/main/resources/images/";
+		String filename = BCrypt.hashpw(String.valueOf(System.currentTimeMillis()), BCrypt.gensalt());
+		String ext = "jpeg";
+
+		filename = filename.replaceAll("[./]", "1");
+
+		List<String> mimeTypes = Arrays.asList(ImageIO.getReaderMIMETypes());
+		for (String mimeType : mimeTypes) {
+			System.err.println(mimeType);
+		}
+
+		try {
+
+//			url = new URL("https://apollo-frankfurt.akamaized.net/v1/files/rhezr5728ttq-BG/image;s=585x461");
+			url = new URL("https://www.alo.bg/user_files/a/alegre/2210552_106691129_big.jpg");
+
+			String mimeType = url.openConnection().getHeaderField("Content-Type");
+			
+			if(!mimeTypes.contains(mimeType))
+				throw new IOException("Mime type not valid!");
+			
+			ext = mimeType.substring(mimeType.lastIndexOf("/") + 1, mimeType.length());
+
+//			BufferedInputStream bis = new BufferedInputStream(url.openStream());
+//
+//			FileUtils.copyInputStreamToFile(bis, new File(path + filename + "." + "jpeg"));
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return "test/index";
 	}
 
 }
