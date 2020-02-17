@@ -2,10 +2,7 @@ package app.scheduled;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -40,6 +37,7 @@ import app.scraper.ContentScraper;
 import app.scraper.LinksScraper;
 import app.scraper.analyze.AnalyzeContent;
 import app.scraper.analyze.AnalyzeRating;
+import app.service.CrawledImageService;
 import app.service.CrawledService;
 import app.service.SourceService;
 
@@ -54,6 +52,9 @@ public class ScrapeScheduled {
 
 	@Autowired
 	private CrawledService crawledService;
+
+	@Autowired
+	private CrawledImageService crawledImageService;
 
 //	@Async
 //	@Scheduled(fixedRate = 3600000)
@@ -169,19 +170,15 @@ public class ScrapeScheduled {
 				crawled.setCrawledRating(crawledRating);
 				crawledRating.setCrawled(crawled);
 
+				// Save crawled
+				crawled = crawledService.save(crawled);
+
 				// Images
-				Set<CrawledImage> crawledImages = null;
 				if (analyzeContent.getImages() != null) {
-					crawledImages = processImages(crawled, analyzeContent.getImages());
+					processImages(crawled, analyzeContent.getImages());
 				}
-				crawled.setCrawledImages(crawledImages);
 
-				// Save
-				crawledService.save(crawled);
-
-				break;
 			}
-			break;
 
 		}
 
@@ -266,13 +263,14 @@ public class ScrapeScheduled {
 			BufferedImageWrapper image = null;
 			try {
 				image = saveImage(address, path);
+
+				crawledImageService
+						.save(new CrawledImage(image.getPath(), image.getFilename(), image.getExt(), crawled));
 			} catch (IOException e) {
 				e.printStackTrace();
 				continue;
 			}
 
-			// Create Image class
-			processedImages.add(new CrawledImage(image.getPath(), image.getFilename(), image.getExt()));
 		}
 
 		return processedImages;
@@ -286,33 +284,15 @@ public class ScrapeScheduled {
 	 * @throws MalformedURLException
 	 * @throws URISyntaxException
 	 */
-//	private void saveImage(String address, String destination)
-//			throws IOException, MalformedURLException, URISyntaxException {
-//
-//		URL url = new URL(address);
-//
-//		InputStream is = url.openStream();
-//		OutputStream os = new FileOutputStream(destination);
-//
-//		byte[] b = new byte[2048];
-//		int length;
-//
-//		while ((length = is.read(b)) != -1) {
-//			os.write(b, 0, length);
-//		}
-//
-//		is.close();
-//		os.close();
-//	}
-
 	private BufferedImageWrapper saveImage(String address, String path) throws IOException {
 
 		// Image valid url address
 		URL url = new URL(address);
 
 		// Generate random filename
+		char c = (char) (new Random().nextInt(26) + 'a');
 		String filename = BCrypt.hashpw(String.valueOf(System.currentTimeMillis()), BCrypt.gensalt()).replaceAll("[./]",
-				"1");
+				String.valueOf(c));
 
 		// Get ImageIO mime types as list
 		List<String> mimeTypes = Arrays.asList(ImageIO.getReaderMIMETypes());

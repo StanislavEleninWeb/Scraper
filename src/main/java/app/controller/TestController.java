@@ -270,7 +270,7 @@ public class TestController {
 		URL url = null;
 		String path = "./src/main/resources/images/";
 		String filename = BCrypt.hashpw(String.valueOf(System.currentTimeMillis()), BCrypt.gensalt());
-		String ext = "jpeg";
+		String ext = null;
 
 		filename = filename.replaceAll("[./]", "1");
 
@@ -285,15 +285,15 @@ public class TestController {
 			url = new URL("https://www.alo.bg/user_files/a/alegre/2210552_106691129_big.jpg");
 
 			String mimeType = url.openConnection().getHeaderField("Content-Type");
-			
-			if(!mimeTypes.contains(mimeType))
+
+			if (!mimeTypes.contains(mimeType))
 				throw new IOException("Mime type not valid!");
-			
+
 			ext = mimeType.substring(mimeType.lastIndexOf("/") + 1, mimeType.length());
 
-//			BufferedInputStream bis = new BufferedInputStream(url.openStream());
-//
-//			FileUtils.copyInputStreamToFile(bis, new File(path + filename + "." + "jpeg"));
+			BufferedInputStream bis = new BufferedInputStream(url.openStream());
+
+			FileUtils.copyInputStreamToFile(bis, new File(path + filename + "." + ext));
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

@@ -29,7 +29,7 @@ public class CrawledImage {
 	private String path;
 
 	@NotBlank
-	@Size(min = 6, max = 60)
+	@Size(min = 60, max = 60)
 	private String filename;
 
 	@NotBlank
@@ -54,6 +54,15 @@ public class CrawledImage {
 		this.path = path;
 		this.filename = filename;
 		this.ext = ext;
+	}
+
+	public CrawledImage(@NotBlank String path, @NotBlank @Size(min = 60, max = 60) String filename,
+			@NotBlank @Size(min = 2, max = 4) String ext, Crawled crawled) {
+		super();
+		this.path = path;
+		this.filename = filename;
+		this.ext = ext;
+		this.crawled = crawled;
 	}
 
 	public int getId() {

@@ -18,8 +18,8 @@ public class CrawledService {
 		return crawledRepository.findByUrl(url) == null ? false : true;
 	}
 
-	public void save(Crawled crawled) {
-		crawledRepository.save(crawled);
+	public Crawled save(Crawled crawled) {
+		return crawledRepository.save(crawled);
 	}
 
 }
