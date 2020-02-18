@@ -3,14 +3,24 @@ package app.scraper.analyze;
 import java.math.BigDecimal;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 import app.entity.BuildType;
 import app.entity.ResidenceType;
 import app.enumerated.CurrencyEnum;
 import app.enumerated.RequestTypeEnum;
+import app.service.BuildTypeService;
+import app.service.ResidenceTypeService;
 
 public abstract class AnalyzeContent {
+
+	@Autowired
+	private BuildTypeService buildTypeService;
+
+	@Autowired
+	private ResidenceTypeService residenceTypeService;
 
 	protected HtmlPage html;
 	protected String title;
@@ -118,6 +128,7 @@ public abstract class AnalyzeContent {
 	 * @return ResidenceType
 	 */
 	public ResidenceType convertStringToResidenceType(String string) {
+//		return residenceTypeService.findFirstByTitleOrKeywords(string);
 		return null;
 	}
 
@@ -128,6 +139,7 @@ public abstract class AnalyzeContent {
 	 * @return BuildType
 	 */
 	public BuildType convertStringToBuildType(String string) {
+//		return buildTypeService.findFirstByTitleOrKeywords(string);
 		return null;
 	}
 

@@ -8,4 +8,6 @@ import app.entity.BuildType;
 @Repository
 public interface BuildTypeRepository extends JpaRepository<BuildType, Integer> {
 
+	BuildType findFirstByTitleOrKeywords(String string, String string2);
+
 }

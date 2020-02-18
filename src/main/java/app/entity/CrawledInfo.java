@@ -63,11 +63,11 @@ public class CrawledInfo {
 	@MapsId
 	private Crawled crawled;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "type")
 	private ResidenceType type;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "build_type")
 	private BuildType buildType;
 

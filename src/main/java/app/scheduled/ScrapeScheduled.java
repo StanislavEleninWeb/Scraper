@@ -177,9 +177,9 @@ public class ScrapeScheduled {
 				if (analyzeContent.getImages() != null) {
 					processImages(crawled, analyzeContent.getImages());
 				}
-
+break;
 			}
-
+break;
 		}
 
 		// Finish Report

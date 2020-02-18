@@ -7,7 +7,42 @@
 
 	<!-- Start Container -->
 	<div class="container">
-		<h1>Home page</h1>
+
+		<div class="well row">
+			<form action="#">
+				
+			</form>
+		</div>
+
+		<div class="well row">
+			<table class="table table-hover table-condensed">
+				<tr>
+					<th>Image</th>
+					<th>Title</th>
+					<th>Type</th>
+					<th>Size</th>
+					<th>Cur</th>
+					<th>Price</th>
+					<th>Price Per Square</th>
+				</tr>
+				<tr th:each="itr : ${crawled}">
+					<td>
+					<span th:text="${itr.image}"></span>
+					<img
+						th:src="@{${itr.image.path}${itr.image.filename}.${itr.image.ext}}" />
+					</td>
+					<td th:text="${itr.crawledInfo.title}"></td>
+					<td
+						th:text="${itr.crawledInfo.type} != null ? ${itr.crawledInfo.type.title} : null"></td>
+					<td><span th:text="${itr.crawledInfo.size}"></span> <span>кв.м.</span>
+					</td>
+					<td th:text="${itr.crawledInfo.currency}"></td>
+					<td th:text="${itr.crawledInfo.price}"></td>
+					<td th:text="${itr.crawledInfo.pricePerSquare}"></td>
+				</tr>
+			</table>
+		</div>
+
 	</div>
 	<!-- End Container -->
 

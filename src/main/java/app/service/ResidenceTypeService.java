@@ -32,4 +32,8 @@ public class ResidenceTypeService {
 	public ResidenceType save(ResidenceType residenceType) {
 		return residenceTypeRepository.save(residenceType);
 	}
+
+	public ResidenceType findFirstByTitleOrKeywords(String string) {
+		return residenceTypeRepository.findFirstByTitleOrKeywords(string, string);
+	}
 }

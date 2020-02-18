@@ -33,4 +33,8 @@ public class BuildTypeService {
 		return buildTypeRepository.save(buildType);
 	}
 
+	public BuildType findFirstByTitleOrKeywords(String string) {
+		return buildTypeRepository.findFirstByTitleOrKeywords(string, string);
+	}
+
 }
