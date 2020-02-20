@@ -33,7 +33,7 @@ public class ResidenceTypeService {
 		return residenceTypeRepository.save(residenceType);
 	}
 
-	public ResidenceType findFirstByTitleOrKeywords(String string) {
-		return residenceTypeRepository.findFirstByTitleOrKeywords(string, string);
+	public ResidenceType findResidenceTypeByKeywords(String string) {
+		return residenceTypeRepository.findResidenceTypeByKeywords("%" + string.trim().toLowerCase() + "%");
 	}
 }

@@ -302,5 +302,31 @@ public class TestController {
 
 		return "test/index";
 	}
+	
+	@GetMapping("/search/residence/type")
+	@ResponseBody
+	public String findResidenceTypeByKeywords() {
+		
+		String string = "Тристаен апартамент";
+		
+		ResidenceType type = residenceTypeService.findResidenceTypeByKeywords(string);
+		
+		System.err.println(type);
+		
+		return null;
+	}
+	
+	@GetMapping("/search/build/type")
+	@ResponseBody
+	public String findBuildTypeByKeywords() {
+		
+		String string = "тухла";
+		
+		BuildType buildType = buildTypeService.findBuildTypeByKeywords(string);
+		
+		System.err.println(buildType);
+		
+		return null;
+	}
 
 }

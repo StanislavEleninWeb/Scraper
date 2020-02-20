@@ -159,27 +159,30 @@ public class ScrapeScheduled {
 					continue;
 				}
 
-				// Save Crawled, Crawled, Rating
+				// Crawled
 				Crawled crawled = new Crawled(link);
 
+				// Source
 				crawled.setSource(source);
 
+				// Info
 				crawled.setCrawledInfo(crawledInfo); // OneToOne relation
 				crawledInfo.setCrawled(crawled); // OneToOne relation
 
+				// Rating
 				crawled.setCrawledRating(crawledRating);
 				crawledRating.setCrawled(crawled);
 
-				// Save crawled
+				// Save
 				crawled = crawledService.save(crawled);
 
 				// Images
 				if (analyzeContent.getImages() != null) {
 					processImages(crawled, analyzeContent.getImages());
 				}
-break;
+				break;
 			}
-break;
+			break;
 		}
 
 		// Finish Report
