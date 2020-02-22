@@ -24,6 +24,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,13 +37,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import app.entity.BuildType;
-import app.entity.Crawled;
-import app.entity.CrawledInfo;
-import app.entity.CrawledRating;
 import app.entity.ResidenceType;
 import app.entity.Source;
-import app.enumerated.CurrencyEnum;
+import app.scraper.ContentScraper;
 import app.scraper.LinksScraper;
+import app.scraper.analyze.AnalyzeContent;
+import app.scraper.analyze.AnalyzeContentOlxBg;
 import app.service.BuildTypeService;
 import app.service.CrawledService;
 import app.service.ResidenceTypeService;
@@ -51,6 +51,9 @@ import app.service.SourceService;
 @Controller
 @RequestMapping("test")
 public class TestController {
+
+	@Autowired
+	private ApplicationContext context;
 
 	@Autowired
 	private SourceService sourceService;
@@ -104,90 +107,20 @@ public class TestController {
 	@ResponseBody
 	public String contentScraper() {
 
-		String link = "https://www.olx.bg/ad/tristaen-apartament-v-kv-karshiyaka-CID368-ID85TKH.html#374e599dda";
+		String link = "https://www.olx.bg/ad/prodavam-3-staen-apartamentna-ul-karlaka-2-CID368-ID86agm.html#1927cbea9d;promoted";
 
 		Source source = sourceService.getOne(2);
 
-		System.err.println(crawledService.isCrawledUrlAlreadySaved(link));
+		// Scrape content
+		ContentScraper contentScraper = null;
+		try {
+			contentScraper = new ContentScraper(link);
+		} catch (Exception e) {
+			logger.info("Failed to fetch page " + link);
+			e.printStackTrace();
+		}
 
-//		// Scrape content
-//		ContentScraper contentScraper = null;
-//		try {
-//			contentScraper = new ContentScraper(link);
-//		} catch (Exception e) {
-//			logger.info("Failed to fetch page " + link);
-//			logger.error(e.getMessage());
-//		}
-
-//		// Instance of AnalyzeContent class
-//		AnalyzeContent analyzeContent = null;
-//		try {
-//			analyzeContent = (AnalyzeContent) Class.forName(source.getSourceGenerator().getContentAnalyzer())
-//					.newInstance();
-//		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-//			logger.error("No such analyze class found! ");
-//			logger.error(e.getMessage());
-//		}
-//
-//		// Check for page content and analyze
-//		if (contentScraper.getPage() == null) {
-//			logger.error("Not found page content for address " + link);
-//		}
-//		analyzeContent.setHtml(contentScraper.getPage());
-//
-//		try {
-//			analyzeContent.analyze();
-//		} catch (Exception e) {
-//			logger.error("Failed to analyze page content for address " + link);
-//			logger.error(e.getMessage());
-//		}
-
-//		// Crawl url address and return CrawledInfo object
-//		CrawledInfo crawledInfo = new CrawledInfo(analyzeContent.getTitle(), analyzeContent.getDescription(),
-//				analyzeContent.getKeywords(), analyzeContent.getRegion(), analyzeContent.getCurrency(),
-//				analyzeContent.getPrice(), analyzeContent.getPricePerSquare(), analyzeContent.getSize(),
-//				analyzeContent.getFloor(), analyzeContent.getBuildAt(), analyzeContent.getType(),
-//				analyzeContent.getBuildType());
-//
-//		System.err.println(crawledInfo);
-//
-//		// Rating
-//		CrawledRating crawledRating = new AnalyzeRating(crawledInfo).getCrawledRating();
-//
-//		// Images
-//		List<CrawledImage> crawledImages = null;
-//		if (analyzeContent.getImages() != null) {
-//			crawledImages = null;
-//		}
-
-		ResidenceType type = residenceTypeService.findById(1);
-		BuildType buildType = buildTypeService.findById(1);
-
-		BigDecimal price = new BigDecimal("44000");
-		BigDecimal pricePerSquare = new BigDecimal("440");
-		Short size = new Short("100");
-		Byte floor = new Byte("4");
-
-		CrawledInfo crawledInfo = new CrawledInfo("title", "description", "keywords", "region", CurrencyEnum.EUR, price,
-				pricePerSquare, size, floor, "build At", type, buildType);
-
-		CrawledRating crawledRating = new CrawledRating(new Double("5"), new Double("5"), new Double("5"),
-				new Double(5));
-
-		// Save Crawled, Crawled, Rating
-		Crawled crawled = new Crawled(link);
-
-		crawled.setSource(source);
-
-		crawled.setCrawledInfo(crawledInfo);
-		crawledInfo.setCrawled(crawled);
-
-		crawled.setCrawledRating(crawledRating);
-		crawledRating.setCrawled(crawled);
-
-//		crawled.setCrawledImages(crawledImages);
-
-		crawledService.save(crawled);
+		AnalyzeContent analyzeContent = (AnalyzeContent) context.getBean(source.getSourceGenerator().getBean());
 
 		return null;
 	}
@@ -302,31 +235,76 @@ public class TestController {
 
 		return "test/index";
 	}
-	
+
 	@GetMapping("/search/residence/type")
 	@ResponseBody
 	public String findResidenceTypeByKeywords() {
-		
+
 		String string = "Тристаен апартамент";
-		
+
 		ResidenceType type = residenceTypeService.findResidenceTypeByKeywords(string);
-		
+
 		System.err.println(type);
-		
+
 		return null;
 	}
-	
+
 	@GetMapping("/search/build/type")
 	@ResponseBody
 	public String findBuildTypeByKeywords() {
-		
+
 		String string = "тухла";
-		
+
 		BuildType buildType = buildTypeService.findBuildTypeByKeywords(string);
-		
+
 		System.err.println(buildType);
-		
+
 		return null;
+	}
+
+	@GetMapping("/bean")
+	@ResponseBody
+	public String findBean() {
+
+//		String[] beans = context.getBeanDefinitionNames();
+//        Arrays.sort(beans);
+//        for (String bean : beans) 
+//        {
+//        	System.err.println(bean);
+////            System.out.println(bean + " of Type :: " + context.getBean(bean).getClass());
+//        }
+
+		System.err.println(context.getBean("analyzeContentOlxBg"));
+
+//		String str = "app.scraper.analyze.AnalyzeContentOlxBg";
+//		
+//		Object content = context.getBean();
+//		
+//		System.err.println(content);
+
+		return null;
+	}
+
+	@GetMapping("/sanitize/url")
+	@ResponseBody
+	public void sanitizeUrl() {
+		String address = "https://www.olx.bg/ad/prodavam-3-staen-apartamentna-ul-karlaka-2-CID368-ID86agm.html#1927cbea9d;promoted?page=22";
+
+		try {
+			URL url = new URL(address);
+
+			System.err.println("Protocol: " + url.getProtocol());
+			System.err.println("User info: " + url.getUserInfo());
+			System.err.println("Host: " + url.getHost());
+			System.err.println("Port: " + url.getPort());
+			System.err.println("Path: " + url.getPath());
+			System.err.println("Query: " + url.getQuery());
+			System.err.println("Ref: " + url.getRef());
+			
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -128,8 +128,7 @@ public abstract class AnalyzeContent {
 	 * @return ResidenceType
 	 */
 	public ResidenceType convertStringToResidenceType(String string) {
-//		return residenceTypeService.findResidenceTypeByKeywords(string);
-		return null;
+		return residenceTypeService.findResidenceTypeByKeywords(string);
 	}
 
 	/**
@@ -139,8 +138,7 @@ public abstract class AnalyzeContent {
 	 * @return BuildType
 	 */
 	public BuildType convertStringToBuildType(String string) {
-//		return buildTypeService.findBuildTypeByKeywords(string);
-		return null;
+		return buildTypeService.findBuildTypeByKeywords(string);
 	}
 
 	@Override

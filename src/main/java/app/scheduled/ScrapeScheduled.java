@@ -21,6 +21,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -48,6 +49,9 @@ public class ScrapeScheduled {
 	Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
+	private ApplicationContext applicationContext;
+
+	@Autowired
 	private SourceService sourceService;
 
 	@Autowired
@@ -56,8 +60,8 @@ public class ScrapeScheduled {
 	@Autowired
 	private CrawledImageService crawledImageService;
 
-//	@Async
-//	@Scheduled(fixedRate = 3600000)
+	@Async
+	@Scheduled(fixedRate = 900000)
 	public void scheduledDeadlineTaskCheck() throws InterruptedByTimeoutException {
 
 		// Start Report
@@ -67,7 +71,7 @@ public class ScrapeScheduled {
 		logger.info("------------------->>>>>>>>> Start scraping <<<<<<<<<<<<--------------------------");
 		logger.info("----------------------------------------------------------------------------------");
 
-		// Get all sources
+		// Get all active sources
 		List<Source> sources = sourceService.findByActive(true);
 
 		// Iterate over each source
@@ -109,32 +113,44 @@ public class ScrapeScheduled {
 					contentScraper = new ContentScraper(link);
 				} catch (Exception e) {
 					logger.info("Failed to fetch page " + link);
-					logger.error(e.getMessage());
+					e.printStackTrace();
 					continue;
 				}
 
-				// Instance of AnalyzeContent class
-				AnalyzeContent analyzeContent;
-				try {
-					analyzeContent = (AnalyzeContent) Class.forName(source.getSourceGenerator().getContentAnalyzer())
-							.newInstance();
-				} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-					logger.error("No such analyze class found! ");
-					logger.error(e.getMessage());
-					continue;
-				}
-
-				// Check for page content and analyze
+				// Check for page content
 				if (contentScraper.getPage() == null) {
 					logger.error("Not found page content for address " + link);
 					continue;
 				}
-				analyzeContent.setHtml(contentScraper.getPage());
 
+//				// Instance of AnalyzeContent class
+//				AnalyzeContent analyzeContent;
+//				try {
+//					analyzeContent = (AnalyzeContent) Class.forName(source.getSourceGenerator().getContentAnalyzer())
+//							.newInstance();
+//				} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+//					logger.error("No such analyze class found! ");
+//					e.printStackTrace();
+//					continue;
+//				}
+
+				// Instance of AnalyzeContent class
+				AnalyzeContent analyzeContent = null;
+				try {
+					analyzeContent = (AnalyzeContent) applicationContext.getBean(source.getSourceGenerator().getBean());
+				} catch (Exception e) {
+					logger.error("No such analyze class found! ");
+					e.printStackTrace();
+					continue;
+				}
+
+				// Analyze page content
+				analyzeContent.setHtml(contentScraper.getPage());
 				try {
 					analyzeContent.analyze();
 				} catch (Exception e) {
 					logger.error("Failed to analyze page content for address " + link + " Message " + e.getMessage());
+					e.printStackTrace();
 					continue;
 				}
 
@@ -148,6 +164,7 @@ public class ScrapeScheduled {
 							analyzeContent.getBuildType());
 				} catch (Exception e) {
 					logger.error("Creating Info Error : " + e.getMessage());
+					e.printStackTrace();
 					continue;
 				}
 
@@ -156,6 +173,7 @@ public class ScrapeScheduled {
 					crawledRating = new AnalyzeRating(crawledInfo).getCrawledRating();
 				} catch (Exception e) {
 					logger.error("Creating Rating Error : " + e.getMessage());
+					e.printStackTrace();
 					continue;
 				}
 
@@ -180,9 +198,9 @@ public class ScrapeScheduled {
 				if (analyzeContent.getImages() != null) {
 					processImages(crawled, analyzeContent.getImages());
 				}
-				break;
+
 			}
-			break;
+
 		}
 
 		// Finish Report
@@ -230,9 +248,7 @@ public class ScrapeScheduled {
 
 		try {
 			for (String link : linksScraper.getLinks()) {
-				if (!isValidUrl(link)) {
-					link = sanitizeUrl(source.getUrl(), link);
-				}
+				link = sanitizeUrl(source.getUrl(), link);
 				links.add(link);
 			}
 		} catch (Exception e) {
@@ -346,15 +362,21 @@ public class ScrapeScheduled {
 	 * @param url
 	 * @return String valid url adress
 	 */
-	private String sanitizeUrl(String base, String url) {
+	private String sanitizeUrl(String domain, String address) {
 
+		URL url;
 		try {
-			URL baseUrl = new URL(base);
-			URL absoluteUrl = new URL(baseUrl, url);
 
-			return absoluteUrl.toString();
+			if (!isValidUrl(address))
+				url = new URL(new URL(domain), address);
+			else
+				url = new URL(address);
+
+			return url.getProtocol() + "://" + url.getHost() + url.getPath();
+
 		} catch (MalformedURLException e) {
 			logger.info(e.getMessage());
+			e.printStackTrace();
 		}
 
 		return null;

@@ -37,6 +37,10 @@ public class SourceGenerator {
 	@Column(name = "content_analyzer", nullable = false)
 	private String contentAnalyzer;
 
+	@NotBlank
+	@Column(name = "bean", nullable = false)
+	private String bean;
+
 	@OneToOne(mappedBy = "sourceGenerator", fetch = FetchType.LAZY, optional = false)
 	private Source source;
 
@@ -44,13 +48,14 @@ public class SourceGenerator {
 		// TODO Auto-generated constructor stub
 	}
 
-	public SourceGenerator(@NotBlank RequestTypeEnum type, @NotBlank @URL String url, @NotBlank String linkRegex,
-			@NotBlank String contentAnalyzer) {
+	public SourceGenerator(RequestTypeEnum type, @NotBlank @URL String url, @NotBlank String linkRegex,
+			@NotBlank String contentAnalyzer, @NotBlank String bean) {
 		super();
 		this.type = type;
 		this.url = url;
 		this.linkRegex = linkRegex;
 		this.contentAnalyzer = contentAnalyzer;
+		this.bean = bean;
 	}
 
 	public int getId() {
@@ -91,6 +96,14 @@ public class SourceGenerator {
 
 	public void setContentAnalyzer(String contentAnalyzer) {
 		this.contentAnalyzer = contentAnalyzer;
+	}
+
+	public String getBean() {
+		return bean;
+	}
+
+	public void setBean(String bean) {
+		this.bean = bean;
 	}
 
 	public Source getSource() {
