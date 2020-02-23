@@ -10,8 +10,17 @@
 
 		<div class="row mt-3">
 			<div class="col">
-				<a th:href="@{/}" class="btn btn-outline-danger">Назад</a> <img
-					th:src="@{/images/image.png}" />
+				<div class="row">
+					<div class="col">
+						<a th:href="@{/}" class="btn btn-outline-danger">Назад</a>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col" th:each="image : ${crawled.crawledImages}">
+						<img
+							th:src="@{${image.path} + ${image.filename} + '.' + ${image.ext}}" />
+					</div>
+				</div>
 			</div>
 			<div class="col">
 				<div class="row">
