@@ -270,7 +270,7 @@ public class ScrapeScheduled {
 		Set<CrawledImage> processedImages = new HashSet<CrawledImage>();
 
 		// Set images path
-		String path = "./src/main/resources/images/" + crawled.getId() + "/";
+		String path = "./images/" + crawled.getId() + "/";
 
 		for (String address : images) {
 
