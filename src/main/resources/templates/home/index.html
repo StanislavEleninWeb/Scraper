@@ -8,11 +8,52 @@
 	<!-- Start Container -->
 	<div class="container">
 
-		<div class="well row">
-			<form action="#"></form>
+		<div class="row mt-3">
+			<form class="form-inline my-2 my-lg-0">
+
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="basic-addon-price">€</span>
+					</div>
+					<input type="number" min="0" class="form-control" name="price"
+						placeholder="Price" aria-label="Price"
+						aria-describedby="basic-addon-price">
+				</div>
+
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="basic-addon-price-per-square">€</span>
+					</div>
+					<input type="number" min="0" class="form-control"
+						name="pricePerSquare" placeholder="Price Per Square"
+						aria-label="Price Per Square"
+						aria-describedby="basic-addon-price-per-square">
+				</div>
+
+				<div class="form-group">
+					<label for="type" class="sr-only">Type</label> <select name="type"
+						class="form-control mr-sm-2">
+						<option>Type</option>
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label for="buildType" class="sr-only">Build Type</label> <select
+						name="buildType" class="form-control mr-sm-2">
+						<option>Build Type</option>
+					</select>
+				</div>
+
+				<div class="form-group">
+					<input class="form-control mr-sm-2" type="search"
+						placeholder="Search" aria-label="Search">
+				</div>
+
+				<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+			</form>
 		</div>
 
-		<div class="well row">
+		<div class="row mt-3">
 			<table class="table table-hover table-condensed">
 				<tr>
 					<th>Image</th>
@@ -22,10 +63,12 @@
 					<th>Cur</th>
 					<th>Price</th>
 					<th>Price Per Square</th>
+					<th></th>
 				</tr>
 				<tr th:each="itr : ${crawled}">
 					<td><img th:src="@{/}" /></td>
-					<td><a th:href="@{/view/{id}(id=${itr.id})}" th:text="${itr.crawledInfo.title}"></a></td>
+					<td><a th:href="@{/view/{id}(id=${itr.id})}"
+						th:text="${itr.crawledInfo.title}"></a></td>
 					<td
 						th:text="${itr.crawledInfo.type} != null ? ${itr.crawledInfo.type.title} : null"></td>
 					<td><span th:text="${itr.crawledInfo.size}"></span> <span>кв.м.</span>
@@ -33,6 +76,8 @@
 					<td th:text="${itr.crawledInfo.currency}"></td>
 					<td th:text="${itr.crawledInfo.price}"></td>
 					<td th:text="${itr.crawledInfo.pricePerSquare}"></td>
+					<td><a th:href="${itr.url}" class="btn btn-outline-primary"
+						target="_blank">Open</a></td>
 				</tr>
 			</table>
 		</div>

@@ -34,4 +34,8 @@ public class CrawledService {
 		return crawledRepository.findAll(pageable);
 	}
 
+	public Crawled findById(int id) {
+		return crawledRepository.findById(id).get();
+	}
+
 }

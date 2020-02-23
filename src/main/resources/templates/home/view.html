@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="includes/head.html"></head>
+<body>
+
+	<header th:insert="includes/header.html"></header>
+
+	<!-- Start Container -->
+	<div class="container">
+
+		<div class="row mt-3">
+			<div class="col">
+				<a th:href="@{/}" class="btn btn-outline-danger">Назад</a> <img
+					alt="" src="">
+			</div>
+			<div class="col">
+				<div class="row">
+					<div class="col">
+						<h5 th:text="${crawled.crawledInfo.title}"></h5>
+					</div>
+					<div class="col-1">
+						<a th:href="${crawled.url}" target="_blank"
+							class="btn btn-outline-primary">Open</a>
+					</div>
+				</div>
+
+				<hr>
+				<p th:text="${crawled.crawledInfo.region}"></p>
+				<hr>
+				<div class="row">
+					<div class="col">
+						<span>Цена: </span> <b th:text="${crawled.crawledInfo.price}"></b><span
+							th:text="${crawled.crawledInfo.currency}"></span>
+					</div>
+					<div class="col">
+						<span>Цена за кв.м : </span> <b
+							th:text="${crawled.crawledInfo.pricePerSquare}"></b><span
+							th:text="${crawled.crawledInfo.currency}"></span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<span>Площ: </span> <b th:text="${crawled.crawledInfo.size}"></b>
+						кв.м
+					</div>
+					<div class="col">
+						<span>Тип: </span> <b th:text="${crawled.crawledInfo.type.title}"></b>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<span>Строителство: </span> <b
+							th:text="${crawled.crawledInfo.buildType.title}"></b>
+					</div>
+					<div class="col">
+						<span>Етаж: </span> <b th:text="${crawled.crawledInfo.floor}"></b>
+					</div>
+				</div>
+				<hr>
+				<p th:text="${crawled.crawledInfo.description}"></p>
+				<hr>
+				<p style="font-weight: bold;"
+					th:text="${crawled.crawledInfo.keywords}"></p>
+				<hr>
+
+				<p>
+					<small><b>Created at: </b></small> <small
+						th:text="${crawled.createdAt}"></small> <small><b>Updated
+							at: </b></small> <small th:text="${crawled.updatedAt}"></small>
+				</p>
+			</div>
+		</div>
+
+	</div>
+	<!-- End Container -->
+
+</body>
+</html>
