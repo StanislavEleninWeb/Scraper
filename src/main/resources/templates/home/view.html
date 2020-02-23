@@ -17,8 +17,8 @@
 				</div>
 				<div class="row">
 					<div class="col" th:each="image : ${crawled.crawledImages}">
-						<img
-							th:src="@{${image.path} + ${image.filename} + '.' + ${image.ext}}" />
+						<img class="img-responsive"
+							th:src="@{'/images/' + ${crawled.id} + '/' + ${image.filename} + '.' + ${image.ext}}">
 					</div>
 				</div>
 			</div>

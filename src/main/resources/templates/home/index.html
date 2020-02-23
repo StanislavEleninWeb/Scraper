@@ -66,7 +66,12 @@
 					<th></th>
 				</tr>
 				<tr th:each="itr : ${crawled}">
-					<td><img th:if="${itr.crawledImages != null}" th:src="@{${itr.crawledImages}}" /></td>
+					<td>
+						<div th:if="${!itr.crawledImages.empty}">
+							<img class="img-responsive" style="width: 60px; height: 60px;"
+								th:src="@{${itr.crawledImages[0].path} + ${itr.crawledImages[0].filename} + '.' + ${itr.crawledImages[0].ext}}">
+						</div>
+					</td>
 					<td><a th:href="@{/view/{id}(id=${itr.id})}"
 						th:text="${itr.crawledInfo.title}"></a></td>
 					<td
