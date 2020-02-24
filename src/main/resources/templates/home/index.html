@@ -7,50 +7,93 @@
 
 	<!-- Start Container -->
 	<div class="container">
-
+		<hr>
 		<div class="row mt-3">
+
 			<form class="form-inline my-2 my-lg-0">
 
-				<div class="input-group">
-					<div class="input-group-prepend">
-						<span class="input-group-text" id="basic-addon-price">€</span>
+				<div class="col">
+
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text" id="basic-addon-price">€</span>
+						</div>
+						<input type="number" min="0" class="form-control" name="price"
+							placeholder="Цена от : " aria-label="Price"
+							aria-describedby="basic-addon-price">
 					</div>
-					<input type="number" min="0" class="form-control" name="price"
-						placeholder="Price" aria-label="Price"
-						aria-describedby="basic-addon-price">
-				</div>
-
-				<div class="input-group">
-					<div class="input-group-prepend">
-						<span class="input-group-text" id="basic-addon-price-per-square">€</span>
+					<div class="input-group mt-1">
+						<div class="input-group-prepend">
+							<span class="input-group-text" id="basic-addon-price">€</span>
+						</div>
+						<input type="number" min="0" class="form-control" name="price"
+							placeholder="Цена до : " aria-label="Price"
+							aria-describedby="basic-addon-price">
 					</div>
-					<input type="number" min="0" class="form-control"
-						name="pricePerSquare" placeholder="Price Per Square"
-						aria-label="Price Per Square"
-						aria-describedby="basic-addon-price-per-square">
+
 				</div>
 
-				<div class="form-group">
-					<label for="type" class="sr-only">Type</label> <select name="type"
-						class="form-control mr-sm-2">
-						<option>Type</option>
-					</select>
+				<div class="col">
+
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text" id="basic-addon-price-per-square">€</span>
+						</div>
+						<input type="number" min="0" class="form-control"
+							name="pricePerSquare" placeholder="Цена за кв. от : "
+							aria-label="Price Per Square"
+							aria-describedby="basic-addon-price-per-square">
+					</div>
+					<div class="input-group mt-1">
+						<div class="input-group-prepend">
+							<span class="input-group-text" id="basic-addon-price-per-square">€</span>
+						</div>
+						<input type="number" min="0" class="form-control"
+							name="pricePerSquare" placeholder="Цена за кв. до : "
+							aria-label="Price Per Square"
+							aria-describedby="basic-addon-price-per-square">
+					</div>
+
 				</div>
 
-				<div class="form-group">
-					<label for="buildType" class="sr-only">Build Type</label> <select
-						name="buildType" class="form-control mr-sm-2">
-						<option>Build Type</option>
-					</select>
+				<div class="col">
+
+					<div class="form-group">
+						<label for="type" class="sr-only">Тип</label> <select name="type"
+							class="form-control" style="width: 100%">
+							<option>Тип : </option>
+							<option th:each="itr : ${residenceType}" th:value="${itr.id}"
+								th:text="${itr.title}"></option>
+						</select>
+					</div>
+					<div class="form-group mt-1">
+						<label for="buildType" class="sr-only">Стройтелство</label> <select
+							name="buildType" class="form-control" style="width: 100%">
+							<option>Стройтелство :</option>
+							<option th:each="itr : ${buildType}" th:value="${itr.id}"
+								th:text="${itr.title}"></option>
+						</select>
+					</div>
+
 				</div>
 
-				<div class="form-group">
-					<input class="form-control mr-sm-2" type="search"
-						placeholder="Search" aria-label="Search">
+				<div class="col">
+
+					<div class="form-group">
+						<input class="form-control mr-sm-2" type="search"
+							placeholder="Search" aria-label="Search">
+					</div>
+					<div class="form-group mt-1">
+						<input class="form-control mr-sm-2" type="search"
+							placeholder="Search" aria-label="Search">
+					</div>
+
 				</div>
 
 				<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+
 			</form>
+
 		</div>
 
 		<div class="row mt-3">
@@ -62,17 +105,17 @@
 					<th>Size</th>
 					<th>Cur</th>
 					<th>Price</th>
-					<th>Price Per Square</th>
+					<th>PPS</th>
 					<th></th>
 				</tr>
 				<tr th:each="itr : ${crawled}">
 					<td>
 						<div th:if="${!itr.crawledImages.empty}">
-							<img class="img-responsive" style="width: 60px; height: 60px;"
+							<img class="img-responsive" style="width: 80px; height: 60px;"
 								th:src="@{${itr.crawledImages[0].path} + ${itr.crawledImages[0].filename} + '.' + ${itr.crawledImages[0].ext}}">
 						</div>
 					</td>
-					<td><a th:href="@{/view/{id}(id=${itr.id})}"
+					<td><a th:href="@{/view/{id}(id=${itr.id})}" target="_blank"
 						th:text="${itr.crawledInfo.title}"></a></td>
 					<td
 						th:text="${itr.crawledInfo.type} != null ? ${itr.crawledInfo.type.title} : null"></td>
@@ -86,7 +129,6 @@
 				</tr>
 			</table>
 		</div>
-
 	</div>
 	<!-- End Container -->
 

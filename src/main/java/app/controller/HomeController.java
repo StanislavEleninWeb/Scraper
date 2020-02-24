@@ -8,7 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import app.service.BuildTypeService;
 import app.service.CrawledService;
+import app.service.ResidenceTypeService;
 
 @Controller
 public class HomeController {
@@ -16,10 +18,18 @@ public class HomeController {
 	@Autowired
 	private CrawledService crawledService;
 
+	@Autowired
+	private ResidenceTypeService residenceTypeService;
+
+	@Autowired
+	private BuildTypeService buildTypeService;
+
 	@GetMapping
 	public String index(Model model) {
 
-		model.addAttribute("crawled", crawledService.findAll(PageRequest.of(0, 10, Sort.by("id").descending())));
+		model.addAttribute("crawled", crawledService.findAll(PageRequest.of(0, 20, Sort.by("id").descending())));
+		model.addAttribute("residenceType", residenceTypeService.findAll());
+		model.addAttribute("buildType", buildTypeService.findAll());
 
 		return "home/index";
 	}
