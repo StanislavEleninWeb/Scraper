@@ -63,6 +63,9 @@ public class Crawled {
 	@JoinTable(name = "course_student", joinColumns = @JoinColumn(name = "crawled_id"), inverseJoinColumns = @JoinColumn(name = "contact_id"))
 	private Set<Contact> contacts;
 
+	@OneToMany(mappedBy = "crawled")
+	private Set<UserCrawled> userCrawled;
+
 	public Crawled() {
 		// TODO Auto-generated constructor stub
 	}
