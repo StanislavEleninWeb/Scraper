@@ -11,6 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
@@ -43,13 +45,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import app.entity.BuildType;
 import app.entity.Crawled;
+import app.entity.CrawledInfo;
 import app.entity.ResidenceType;
 import app.entity.Source;
+import app.enumerated.SearchOperation;
+import app.repository.specs.CrawledInfoSpecification;
+import app.repository.specs.CrawledSpecification;
+import app.repository.specs.SearchCriteria;
 import app.scraper.ContentScraper;
 import app.scraper.LinksScraper;
 import app.scraper.analyze.AnalyzeContent;
 import app.scraper.analyze.AnalyzeContentOlxBg;
 import app.service.BuildTypeService;
+import app.service.CrawledInfoService;
 import app.service.CrawledService;
 import app.service.ResidenceTypeService;
 import app.service.SourceService;
@@ -67,6 +75,9 @@ public class TestController {
 
 	@Autowired
 	private CrawledService crawledService;
+	
+	@Autowired
+	private CrawledInfoService crawledInfoService;
 
 	@Autowired
 	private ResidenceTypeService residenceTypeService;
@@ -316,9 +327,26 @@ public class TestController {
 
 	@GetMapping("/jpa/criteria")
 	@ResponseBody
-	public void jpaCriteria() {
-		List<Crawled> crawled = crawledService.findAll();
-
+	public String jpaCriteria() {
+//		CrawledSpecification spec1 = new CrawledSpecification();
+//		spec1.add(new SearchCriteria("crawled.url", "mnogostaen", SearchOperation.MATCH));
+		
+		CrawledInfoSpecification spec = new CrawledInfoSpecification();
+		spec.add(new SearchCriteria("price", 90000, SearchOperation.LESS_THAN));
+		spec.add(new SearchCriteria("price", 50000, SearchOperation.GREATER_THAN));
+		spec.add(new SearchCriteria("size", 100, SearchOperation.GREATER_THAN));
+		spec.add(new SearchCriteria("description", "СОБСТВЕНИК", SearchOperation.MATCH));
+		spec.add(new SearchCriteria("crawled.url", "mnogostaen", SearchOperation.MATCH));
+		
+		Page<CrawledInfo> crawled = crawledInfoService.findAll(spec, PageRequest.of(0, 20));
+		
+		System.err.println(crawled);
+		
+		for(CrawledInfo itr : crawled) {
+			System.err.println(itr);
+		}
+		
+		return crawled.toString();
 	}
 
 	@GetMapping("/jpa/sort")
