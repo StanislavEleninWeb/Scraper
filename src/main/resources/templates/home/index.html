@@ -10,58 +10,82 @@
 		<hr>
 		<div class="row mt-3">
 
-			<form class="form-inline my-2 my-lg-0">
+			<form class="form-inline my-2 my-lg-0" method="POST" action="#"
+				th:action="@{/}" th:object="${userCriteria}">
 
-				<div class="col">
+				<div class="col-2">
 
 					<div class="input-group">
 						<div class="input-group-prepend">
-							<span class="input-group-text" id="basic-addon-price">€</span>
+							<span class="input-group-text" id="basic-addon-price-min">€</span>
 						</div>
-						<input type="number" min="0" class="form-control" name="price"
-							placeholder="Цена от : " aria-label="Price"
-							aria-describedby="basic-addon-price">
+						<input type="number" min="0" class="form-control"
+							th:field="*{priceMin}" placeholder="Цена от : "
+							aria-label="Price Min" aria-describedby="basic-addon-price-min">
 					</div>
 					<div class="input-group mt-1">
 						<div class="input-group-prepend">
-							<span class="input-group-text" id="basic-addon-price">€</span>
+							<span class="input-group-text" id="basic-addon-price-max">€</span>
 						</div>
-						<input type="number" min="0" class="form-control" name="price"
-							placeholder="Цена до : " aria-label="Price"
-							aria-describedby="basic-addon-price">
+						<input type="number" min="0" class="form-control"
+							th:field="*{priceMax}" placeholder="Цена до : "
+							aria-label="Price Max" aria-describedby="basic-addon-price-max">
 					</div>
 
 				</div>
 
-				<div class="col">
+				<div class="col-2">
 
 					<div class="input-group">
 						<div class="input-group-prepend">
-							<span class="input-group-text" id="basic-addon-price-per-square">€</span>
+							<span class="input-group-text"
+								id="basic-addon-price-per-square-min">€/кв.м</span>
 						</div>
 						<input type="number" min="0" class="form-control"
-							name="pricePerSquare" placeholder="Цена за кв. от : "
-							aria-label="Price Per Square"
-							aria-describedby="basic-addon-price-per-square">
+							th:field="*{pricePerSquareMin}" placeholder="Цена за кв.м от : "
+							aria-label="Price Per Square Min"
+							aria-describedby="basic-addon-price-per-square-min">
 					</div>
 					<div class="input-group mt-1">
 						<div class="input-group-prepend">
-							<span class="input-group-text" id="basic-addon-price-per-square">€</span>
+							<span class="input-group-text"
+								id="basic-addon-price-per-square-max">€/кв.м</span>
 						</div>
 						<input type="number" min="0" class="form-control"
-							name="pricePerSquare" placeholder="Цена за кв. до : "
-							aria-label="Price Per Square"
-							aria-describedby="basic-addon-price-per-square">
+							th:field="*{pricePerSquareMax}" placeholder="Цена за кв.м до : "
+							aria-label="Price Per Square Max"
+							aria-describedby="basic-addon-price-per-square-max">
 					</div>
 
 				</div>
 
-				<div class="col">
+				<div class="col-2">
+
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text" id="basic-addon-size-min">кв.м</span>
+						</div>
+						<input type="number" min="0" class="form-control"
+							th:field="*{sizeMin}" placeholder="Площ от : "
+							aria-label="Size Min" aria-describedby="basic-addon-size-min">
+					</div>
+					<div class="input-group mt-1">
+						<div class="input-group-prepend">
+							<span class="input-group-text" id="basic-addon-size-max">кв.м</span>
+						</div>
+						<input type="number" min="0" class="form-control"
+							th:field="*{sizeMax}" placeholder="Площ до : "
+							aria-label="Size Max" aria-describedby="basic-addon-size-max">
+					</div>
+
+				</div>
+
+				<div class="col-2">
 
 					<div class="form-group">
 						<label for="type" class="sr-only">Тип</label> <select name="type"
 							class="form-control" style="width: 100%">
-							<option>Тип : </option>
+							<option>Тип :</option>
 							<option th:each="itr : ${residenceType}" th:value="${itr.id}"
 								th:text="${itr.title}"></option>
 						</select>
@@ -77,58 +101,136 @@
 
 				</div>
 
-				<div class="col">
+				<div class="col-2">
 
 					<div class="form-group">
-						<input class="form-control mr-sm-2" type="search"
-							placeholder="Search" aria-label="Search">
+						<input class="form-control w-100" type="search" placeholder="Search"
+							aria-label="Search">
 					</div>
 					<div class="form-group mt-1">
-						<input class="form-control mr-sm-2" type="search"
-							placeholder="Search" aria-label="Search">
+						<input class="form-control w-100" type="search" placeholder="Search"
+							aria-label="Search">
 					</div>
 
 				</div>
 
-				<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+				<div class="col-2">
+
+					<div class="form-group">
+						<button class="btn btn-outline-danger w-100">Clear</button>
+					</div>
+					<div class="form-group mt-1">
+						<button class="btn btn-outline-success w-100" type="submit">Search</button>
+					</div>
+
+				</div>
+
 
 			</form>
 
 		</div>
 
 		<div class="row mt-3">
-			<table class="table table-hover table-condensed">
-				<tr>
-					<th>Image</th>
-					<th>Title</th>
-					<th>Type</th>
-					<th>Size</th>
-					<th>Cur</th>
-					<th>Price</th>
-					<th>PPS</th>
-					<th></th>
-				</tr>
-				<tr th:each="itr : ${crawled}">
-					<td>
-						<div th:if="${!itr.crawledImages.empty}">
-							<img class="img-responsive" style="width: 80px; height: 60px;"
-								th:src="@{${itr.crawledImages[0].path} + ${itr.crawledImages[0].filename} + '.' + ${itr.crawledImages[0].ext}}">
-						</div>
-					</td>
-					<td><a th:href="@{/view/{id}(id=${itr.id})}" target="_blank"
-						th:text="${itr.crawledInfo.title}"></a></td>
-					<td
-						th:text="${itr.crawledInfo.type} != null ? ${itr.crawledInfo.type.title} : null"></td>
-					<td><span th:text="${itr.crawledInfo.size}"></span> <span>кв.м.</span>
-					</td>
-					<td th:text="${itr.crawledInfo.currency}"></td>
-					<td th:text="${itr.crawledInfo.price}"></td>
-					<td th:text="${itr.crawledInfo.pricePerSquare}"></td>
-					<td><a th:href="${itr.url}" class="btn btn-outline-primary"
-						target="_blank">Open</a></td>
-				</tr>
-			</table>
+			<div class="col">
+				<table class="table table-hover table-bordered table-condensed">
+					<thead class="table-dark">
+						<tr>
+							<th>Image</th>
+							<th>Title</th>
+							<th><a class="text-white"
+								th:href="@{/?sort=crawledInfo.type.id,DESC}">Type</a></th>
+							<th><a class="text-white"
+								th:href="@{/?sort=crawledInfo.size,DESC}">Size</a></th>
+							<th>Cur</th>
+							<th><a class="text-white"
+								th:href="@{/?sort=crawledInfo.price,DESC}">Price</a></th>
+							<th><a class="text-white"
+								th:href="@{/?sort=crawledInfo.pricePerSquare,DESC}">PPS</a></th>
+						</tr>
+					</thead>
+					<tr th:each="itr : ${crawled}" class="table-secondary">
+						<td>
+							<div th:if="${!itr.crawledImages.empty}">
+								<img class="img-responsive" style="width: 80px; height: 60px;"
+									th:src="@{${itr.crawledImages[0].path} + ${itr.crawledImages[0].filename} + '.' + ${itr.crawledImages[0].ext}}">
+							</div>
+						</td>
+						<td>
+							<div class="row">
+								<div class="col">
+									<a class="text-dark" th:href="@{/view/{id}(id=${itr.id})}"
+										target="_blank" th:text="${itr.crawledInfo.title}"></a>
+								</div>
+							</div>
+							<div class="row" style="text-align: center;">
+								<div class="col">
+									<a th:href="${itr.url}" class="btn btn-sm btn-outline-info"
+										target="_blank"> <span class="select-menu-item-icon"><svg
+												class="octicon octicon-search" viewBox="0 0 16 16"
+												version="1.1" width="16" height="16" aria-hidden="true">
+												<path fill-rule="evenodd"
+													d="M15.7 13.3l-3.81-3.83A5.93 5.93 0 0013 6c0-3.31-2.69-6-6-6S1 2.69 1 6s2.69 6 6 6c1.3 0 2.48-.41 3.47-1.11l3.83 3.81c.19.2.45.3.7.3.25 0 .52-.09.7-.3a.996.996 0 000-1.41v.01zM7 10.7c-2.59 0-4.7-2.11-4.7-4.7 0-2.59 2.11-4.7 4.7-4.7 2.59 0 4.7 2.11 4.7 4.7 0 2.59-2.11 4.7-4.7 4.7z" /></svg></span>
+									</a> <a th:href="${itr.url}" class="btn btn-sm btn-outline-warning"
+										target="_blank"> <span class="select-menu-item-icon"><svg
+												class="octicon octicon-star" viewBox="0 0 14 16"
+												version="1.1" width="14" height="16" aria-hidden="true">
+												<path fill-rule="evenodd"
+													d="M14 6l-4.9-.64L7 1 4.9 5.36 0 6l3.6 3.26L2.67 14 7 11.67 11.33 14l-.93-4.74L14 6z" /></svg></span>
+									</a> <a th:href="${itr.url}" class="btn btn-sm btn-outline-danger"
+										target="_blank"><span class="select-menu-item-icon"><svg
+												class="octicon octicon-pin" viewBox="0 0 16 16"
+												version="1.1" width="16" height="16" aria-hidden="true">
+												<path fill-rule="evenodd"
+													d="M10 1.2V2l.5 1L6 6H2.2c-.44 0-.67.53-.34.86L5 10l-4 5 5-4 3.14 3.14a.5.5 0 00.86-.34V10l3-4.5 1 .5h.8c.44 0 .67-.53.34-.86L10.86.86a.5.5 0 00-.86.34z" /></svg></span>
+									</a>
+								</div>
+							</div>
+						</td>
+						<td
+							th:text="${itr.crawledInfo.type} != null ? ${itr.crawledInfo.type.title} : null"></td>
+						<td><span th:text="${itr.crawledInfo.size}"></span> <span>кв.м.</span>
+						</td>
+						<td th:text="${itr.crawledInfo.currency}"></td>
+						<td th:text="${itr.crawledInfo.price}"></td>
+						<td th:text="${itr.crawledInfo.pricePerSquare}"></td>
+					</tr>
+				</table>
+			</div>
 		</div>
+
+		<div class="row">
+			<div class="col text-center">
+				<div class="pagination-div">
+					<span th:if="${crawled.hasPrevious()}"> <a
+						class="btn btn-sm btn-secondary"
+						th:href="@{/(page=${crawled.number-1},size=${crawled.size},sort=${sort})}">First</a>
+					</span> <span th:if="${crawled.hasPrevious()}"> <a
+						class="btn btn-sm btn-info"
+						th:href="@{/(page=${crawled.number-1},size=${crawled.size},sort=${sort})}">Previous</a>
+					</span>
+
+					<th:block
+						th:each="i: ${#numbers.sequence(0, crawled.totalPages - 1)}">
+						<span th:if="${crawled.number == i}"
+							class="selected btn btn-primary">[[${i}+1]]</span>
+						<span th:unless="${crawled.number == i}"> <a
+							class="btn btn-sm btn-outline-info"
+							th:href="@{/(page=${i},size=${crawled.size},sort=${sort})}">[[${i}+1]]</a>
+						</span>
+					</th:block>
+
+					<span th:if="${crawled.hasNext()}"> <a
+						class="btn btn-sm btn-info"
+						th:href="@{/(page=${crawled.number+1},size=${crawled.size},sort=${sort})}">Next</a>
+					</span> <span th:if="${crawled.hasNext()}"> <a
+						class="btn btn-sm btn-secondary"
+						th:href="@{/(page=${crawled.number+1},size=${crawled.size},sort=${sort})}">Last</a>
+					</span>
+				</div>
+			</div>
+		</div>
+
+
 	</div>
 	<!-- End Container -->
 

@@ -99,7 +99,6 @@ public class AnalyzeContentOlxBg extends AnalyzeContent {
 	 * @throws Exception
 	 */
 	protected void setKeywords(HtmlElement container) throws Exception {
-		System.err.println(container);
 		List<HtmlAnchor> response = container.getByXPath(".//a");
 
 		keywords = "";

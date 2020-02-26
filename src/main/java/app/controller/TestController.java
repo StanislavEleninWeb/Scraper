@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 
@@ -25,6 +26,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +42,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import app.entity.BuildType;
+import app.entity.Crawled;
 import app.entity.ResidenceType;
 import app.entity.Source;
 import app.scraper.ContentScraper;
@@ -48,6 +54,7 @@ import app.service.CrawledService;
 import app.service.ResidenceTypeService;
 import app.service.SourceService;
 
+@SuppressWarnings("unused")
 @Controller
 @RequestMapping("test")
 public class TestController {
@@ -300,11 +307,32 @@ public class TestController {
 			System.err.println("Path: " + url.getPath());
 			System.err.println("Query: " + url.getQuery());
 			System.err.println("Ref: " + url.getRef());
-			
+
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	@GetMapping("/jpa/criteria")
+	@ResponseBody
+	public void jpaCriteria() {
+		List<Crawled> crawled = crawledService.findAll();
+
+	}
+
+	@GetMapping("/jpa/sort")
+	@ResponseBody
+	public void jpaSort(@PageableDefault(size = 20, sort = "id", direction = Direction.DESC) Pageable pageable) {
+		Page<Crawled> crawled = crawledService.findAll(pageable);
+
+		System.err.println(crawled.getSort());
+
+		String sort = crawled.getSort().stream()
+				.map(order -> "&sort=" + order.getProperty() + "," + order.getDirection())
+				.collect(Collectors.joining("&sort="));
+
+		System.err.println(sort);
 	}
 
 }

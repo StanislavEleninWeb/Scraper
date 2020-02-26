@@ -1,19 +1,32 @@
 package app.controller;
 
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import app.entity.Crawled;
 import app.service.BuildTypeService;
 import app.service.CrawledService;
 import app.service.ResidenceTypeService;
+import app.service.UserCriteriaService;
+import app.service.UserService;
 
 @Controller
 public class HomeController {
+
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private UserCriteriaService userCriteriaService;
 
 	@Autowired
 	private CrawledService crawledService;
@@ -25,11 +38,19 @@ public class HomeController {
 	private BuildTypeService buildTypeService;
 
 	@GetMapping
-	public String index(Model model) {
+	public String index(@PageableDefault(size = 20, sort = "id", direction = Direction.DESC) Pageable pageable,
+			Model model) {
 
-		model.addAttribute("crawled", crawledService.findAll(PageRequest.of(0, 20, Sort.by("id").descending())));
+		model.addAttribute("userCriteria", userCriteriaService.findByUserAndPrimary(userService.findById(1), true));
 		model.addAttribute("residenceType", residenceTypeService.findAll());
 		model.addAttribute("buildType", buildTypeService.findAll());
+
+		Page<Crawled> crawled = crawledService.findAll(pageable);
+		model.addAttribute("crawled", crawled);
+
+		String sort = crawled.getSort().stream().map(order -> order.getProperty() + "," + order.getDirection())
+				.collect(Collectors.joining("&sort="));
+		model.addAttribute("sort", sort);
 
 		return "home/index";
 	}

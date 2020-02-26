@@ -63,7 +63,7 @@ public class Crawled {
 	@JoinTable(name = "course_student", joinColumns = @JoinColumn(name = "crawled_id"), inverseJoinColumns = @JoinColumn(name = "contact_id"))
 	private Set<Contact> contacts;
 
-	@OneToMany(mappedBy = "crawled")
+	@OneToMany(mappedBy = "crawled", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<UserCrawled> userCrawled;
 
 	public Crawled() {
@@ -145,6 +145,14 @@ public class Crawled {
 
 	public void setContacts(Set<Contact> contacts) {
 		this.contacts = contacts;
+	}
+
+	public Set<UserCrawled> getUserCrawled() {
+		return userCrawled;
+	}
+
+	public void setUserCrawled(Set<UserCrawled> userCrawled) {
+		this.userCrawled = userCrawled;
 	}
 
 	@Override

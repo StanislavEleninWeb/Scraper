@@ -12,14 +12,38 @@
 			<div class="col">
 				<div class="row">
 					<div class="col">
-						<a th:href="@{/}" class="btn btn-outline-danger">Назад</a>
+						<a th:href="@{/}" class="btn btn-outline-secondary">Назад</a>
 					</div>
 				</div>
-				<div class="row">
-					<div class="col" th:each="image : ${crawled.crawledImages}">
-						<img class="img-responsive"
-							th:src="@{'/images/' + ${crawled.id} + '/' + ${image.filename} + '.' + ${image.ext}}">
+				<div class="row mt-3">
+
+					<div id="carouselExampleIndicators" class="carousel slide w-100"
+						data-ride="carousel">
+						<ol class="carousel-indicators">
+							<li th:each="image, itr : ${crawled.crawledImages}"
+								data-target="#carouselExampleIndicators"
+								th:attr="data-slide-to=${itr.index}"
+								th:classappend="${itr.first}?active"></li>
+						</ol>
+						<div class="carousel-inner">
+							<div th:each="image, itr : ${crawled.crawledImages}"
+								class="carousel-item" th:classappend="${itr.first}?active">
+								<img
+									th:src="@{'/images/' + ${crawled.id} + '/' + ${image.filename} + '.' + ${image.ext}}"
+									class="d-block w-100" alt="...">
+							</div>
+						</div>
+						<a class="carousel-control-prev" href="#carouselExampleIndicators"
+							role="button" data-slide="prev"> <span
+							class="carousel-control-prev-icon" aria-hidden="true"></span> <span
+							class="sr-only">Previous</span>
+						</a> <a class="carousel-control-next"
+							href="#carouselExampleIndicators" role="button" data-slide="next">
+							<span class="carousel-control-next-icon" aria-hidden="true"></span>
+							<span class="sr-only">Next</span>
+						</a>
 					</div>
+
 				</div>
 			</div>
 			<div class="col">
@@ -53,16 +77,19 @@
 						кв.м
 					</div>
 					<div class="col">
-						<span>Тип: </span> <b th:text="${crawled.crawledInfo.type.title}"></b>
+						<span>Тип: </span> <b th:if="${crawled.crawledInfo.type}!=null"
+							th:text="${crawled.crawledInfo.type.title}"></b>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col">
 						<span>Строителство: </span> <b
+							th:if="${crawled.crawledInfo.buildType}!=null"
 							th:text="${crawled.crawledInfo.buildType.title}"></b>
 					</div>
 					<div class="col">
-						<span>Етаж: </span> <b th:text="${crawled.crawledInfo.floor}"></b>
+						<span>Етаж: </span> <b th:if="${crawled.crawledInfo.floor}!=null"
+							th:text="${crawled.crawledInfo.floor}"></b>
 					</div>
 				</div>
 				<hr>

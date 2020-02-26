@@ -17,6 +17,7 @@ public class ApplicationConfiguration extends WebMvcConfigurerAdapter {
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/images/**").addResourceLocations("file:images/");
+		registry.addResourceHandler("/js/**").addResourceLocations("file:src/main/resources/static/js/");
 	}
 
 }
