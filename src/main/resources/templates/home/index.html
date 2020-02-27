@@ -104,12 +104,12 @@
 				<div class="col-2">
 
 					<div class="form-group">
-						<input class="form-control w-100" type="search" placeholder="Search"
-							aria-label="Search">
+						<input class="form-control w-100" type="search"
+							placeholder="Search" aria-label="Search">
 					</div>
 					<div class="form-group mt-1">
-						<input class="form-control w-100" type="search" placeholder="Search"
-							aria-label="Search">
+						<input class="form-control w-100" type="search"
+							placeholder="Search" aria-label="Search">
 					</div>
 
 				</div>
@@ -135,6 +135,7 @@
 				<table class="table table-hover table-bordered table-condensed">
 					<thead class="table-dark">
 						<tr>
+							<th>ID</th>
 							<th>Image</th>
 							<th>Title</th>
 							<th><a class="text-white"
@@ -149,6 +150,7 @@
 						</tr>
 					</thead>
 					<tr th:each="itr : ${crawled}" class="table-secondary">
+						<td th:text="${itr.id}"></td>
 						<td>
 							<div th:if="${!itr.crawledImages.empty}">
 								<img class="img-responsive" style="width: 80px; height: 60px;"

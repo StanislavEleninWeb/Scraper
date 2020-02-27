@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +76,7 @@ public class TestController {
 
 	@Autowired
 	private CrawledService crawledService;
-	
+
 	@Autowired
 	private CrawledInfoService crawledInfoService;
 
@@ -330,22 +331,22 @@ public class TestController {
 	public String jpaCriteria() {
 //		CrawledSpecification spec1 = new CrawledSpecification();
 //		spec1.add(new SearchCriteria("crawled.url", "mnogostaen", SearchOperation.MATCH));
-		
+
 		CrawledInfoSpecification spec = new CrawledInfoSpecification();
 		spec.add(new SearchCriteria("price", 90000, SearchOperation.LESS_THAN));
 		spec.add(new SearchCriteria("price", 50000, SearchOperation.GREATER_THAN));
 		spec.add(new SearchCriteria("size", 100, SearchOperation.GREATER_THAN));
 		spec.add(new SearchCriteria("description", "СОБСТВЕНИК", SearchOperation.MATCH));
 		spec.add(new SearchCriteria("crawled.url", "mnogostaen", SearchOperation.MATCH));
-		
+
 		Page<CrawledInfo> crawled = crawledInfoService.findAll(spec, PageRequest.of(0, 20));
-		
+
 		System.err.println(crawled);
-		
-		for(CrawledInfo itr : crawled) {
+
+		for (CrawledInfo itr : crawled) {
 			System.err.println(itr);
 		}
-		
+
 		return crawled.toString();
 	}
 
@@ -361,6 +362,20 @@ public class TestController {
 				.collect(Collectors.joining("&sort="));
 
 		System.err.println(sort);
+	}
+
+	@GetMapping("/currency")
+	@ResponseBody
+	public void currency() {
+
+		String str = "221000 лев. ЛЕВ.";
+		String[] searchList = { "\u20AC", "EURO", "евро", "ЕВРО", "лев.", "ЛЕВ.", "ЛЕВА", "лева", "Лева" };
+		String[] replacement = { "EUR", "EUR", "EUR", "EUR", "BGN", "BGN", "BGN", "BGN", "BGN" };
+
+		str = str.replaceAll("[0-9\\s]", "").trim();
+		str = StringUtils.replaceEach(str, searchList, replacement);
+
+		System.err.println(str);
 	}
 
 }
