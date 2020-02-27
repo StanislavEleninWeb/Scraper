@@ -171,7 +171,7 @@ public class AnalyzeContentOlxBg extends AnalyzeContent {
 		HtmlStrong response = (HtmlStrong) container
 				.getByXPath(".//div[@id=\"offeractions\"]//div[@class=\"price-label\"]//strong").get(0);
 
-		currency = getCurrencyEnum(response.getTextContent().replaceAll("[0-9]", "").replace("\u20AC", "EUR").trim());
+		currency = getCurrencyEnum(convertStringToCurrencyType(response.getTextContent()));
 	}
 
 	/**

@@ -3,6 +3,7 @@ package app.scraper.analyze;
 import java.math.BigDecimal;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -139,6 +140,17 @@ public abstract class AnalyzeContent {
 	 */
 	public BuildType convertStringToBuildType(String string) {
 		return buildTypeService.findBuildTypeByKeywords(string);
+	}
+
+	public String convertStringToCurrencyType(String str) {
+
+		String[] searchList = { "\u20AC", "EURO", "евро", "ЕВРО", "лев.", "ЛЕВ.", "ЛЕВА", "лева", "Лева" };
+		String[] replacement = { "EUR", "EUR", "EUR", "EUR", "BGN", "BGN", "BGN", "BGN", "BGN" };
+
+		str = str.replaceAll("[0-9\\s]", "").trim();
+		str = StringUtils.replaceEach(str, searchList, replacement);
+
+		return str;
 	}
 
 	@Override
