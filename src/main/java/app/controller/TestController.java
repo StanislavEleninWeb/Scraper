@@ -32,6 +32,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
@@ -329,21 +330,33 @@ public class TestController {
 	@GetMapping("/jpa/criteria")
 	@ResponseBody
 	public String jpaCriteria() {
-//		CrawledSpecification spec1 = new CrawledSpecification();
-//		spec1.add(new SearchCriteria("crawled.url", "mnogostaen", SearchOperation.MATCH));
 
-		CrawledInfoSpecification spec = new CrawledInfoSpecification();
-		spec.add(new SearchCriteria("price", 90000, SearchOperation.LESS_THAN));
-		spec.add(new SearchCriteria("price", 50000, SearchOperation.GREATER_THAN));
-		spec.add(new SearchCriteria("size", 100, SearchOperation.GREATER_THAN));
-		spec.add(new SearchCriteria("description", "СОБСТВЕНИК", SearchOperation.MATCH));
-		spec.add(new SearchCriteria("crawled.url", "mnogostaen", SearchOperation.MATCH));
+//		CrawledSpecification spec = new CrawledSpecification();
+//		spec.add(new SearchCriteria("url", "mnogostaen", SearchOperation.MATCH));
+//		spec.add(new SearchCriteria("price", 90000, SearchOperation.LESS_THAN));
 
-		Page<CrawledInfo> crawled = crawledInfoService.findAll(spec, PageRequest.of(0, 20));
+//		CrawledInfoSpecification spec2 = new CrawledInfoSpecification();
+//		spec.add(new SearchCriteria("price", 90000, SearchOperation.LESS_THAN));
+//		spec.add(new SearchCriteria("price", 50000, SearchOperation.GREATER_THAN));
+//		spec.add(new SearchCriteria("size", 100, SearchOperation.GREATER_THAN));
+//		spec.add(new SearchCriteria("description", "СОБСТВЕНИК", SearchOperation.MATCH));
+//		spec.add(new SearchCriteria("crawled.url", "mnogostaen", SearchOperation.MATCH));
+
+//		Page<Crawled> crawled = crawledService.findAll(
+//				CrawledSpecification.getCrawledByName(new SearchCriteria("url", "mnogostaen", SearchOperation.MATCH)),
+//				PageRequest.of(0, 20));
+
+//		Page<Crawled> crawled = crawledService.findAll(CrawledSpecification.getCrawledByLessThenPrice(50000), PageRequest.of(0, 20));
+//		Page<Crawled> crawled = crawledService.findAll(CrawledSpecification.getCrawledByGreaterByPrice(new SearchCriteria("price", 300000, SearchOperation.MATCH)), PageRequest.of(0, 20));
+
+		Page<Crawled> crawled = crawledService.findAll(
+				CrawledSpecification.getCrawledByPrice(new SearchCriteria("price", 50000, SearchOperation.MATCH),
+						new SearchCriteria("price", 55000, SearchOperation.MATCH)),
+				PageRequest.of(0, 20));
 
 		System.err.println(crawled);
 
-		for (CrawledInfo itr : crawled) {
+		for (Crawled itr : crawled) {
 			System.err.println(itr);
 		}
 
