@@ -6,6 +6,7 @@ public class SearchCriteria {
 
 	private String key;
 	private Object value;
+	private String reference;
 	private SearchOperation operation;
 
 	public SearchCriteria() {
@@ -16,6 +17,14 @@ public class SearchCriteria {
 		super();
 		this.key = key;
 		this.value = value;
+		this.operation = operation;
+	}
+
+	public SearchCriteria(String key, Object value, String reference, SearchOperation operation) {
+		super();
+		this.key = key;
+		this.value = value;
+		this.reference = reference;
 		this.operation = operation;
 	}
 
@@ -33,6 +42,14 @@ public class SearchCriteria {
 
 	public void setValue(Object value) {
 		this.value = value;
+	}
+
+	public String getReference() {
+		return reference;
+	}
+
+	public void setReference(String reference) {
+		this.reference = reference;
 	}
 
 	public SearchOperation getOperation() {
