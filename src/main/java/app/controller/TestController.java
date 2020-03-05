@@ -350,10 +350,12 @@ public class TestController {
 //		Page<Crawled> crawled = crawledService.findAll(CrawledSpecification.getCrawledByLessThenPrice(50000), PageRequest.of(0, 20));
 //		Page<Crawled> crawled = crawledService.findAll(CrawledSpecification.getCrawledByGreaterByPrice(new SearchCriteria("price", 300000, SearchOperation.MATCH)), PageRequest.of(0, 20));
 
-		Page<Crawled> crawled = crawledService.findAll(
-				CrawledSpecification.getCrawledByPrice(new SearchCriteria("price", 50000, SearchOperation.MATCH),
-						new SearchCriteria("price", 55000, SearchOperation.MATCH)),
-				PageRequest.of(0, 20));
+//		Page<Crawled> crawled = crawledService.findAll(
+//				CrawledSpecification.getCrawledByPrice(new SearchCriteria("price", 50000, SearchOperation.MATCH),
+//						new SearchCriteria("price", 55000, SearchOperation.MATCH)),
+//				PageRequest.of(0, 20));
+
+		Page<Crawled> crawled = crawledService.findAll(spec, PageRequest.of(0, 20));
 
 		System.err.println(crawled);
 
