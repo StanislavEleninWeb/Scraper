@@ -331,9 +331,10 @@ public class TestController {
 	@ResponseBody
 	public String jpaCriteria() {
 
-//		CrawledSpecification spec = new CrawledSpecification();
-//		spec.add(new SearchCriteria("url", "mnogostaen", SearchOperation.MATCH));
-//		spec.add(new SearchCriteria("price", 90000, SearchOperation.LESS_THAN));
+		CrawledSpecification spec = new CrawledSpecification();
+
+		spec.add(new SearchCriteria("url", "mnogostaen", SearchOperation.MATCH));
+		spec.add(new SearchCriteria("price", 90000, "crawledInfo", SearchOperation.LESS_THAN_EQUAL));
 
 //		CrawledInfoSpecification spec2 = new CrawledInfoSpecification();
 //		spec.add(new SearchCriteria("price", 90000, SearchOperation.LESS_THAN));
