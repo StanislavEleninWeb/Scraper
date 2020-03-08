@@ -2,6 +2,8 @@ package app.controller;
 
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,7 +12,9 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import app.entity.Crawled;
 import app.entity.UserCriteria;
@@ -40,13 +44,16 @@ public class HomeController {
 	private BuildTypeService buildTypeService;
 
 	@GetMapping
-	public String index(@PageableDefault(size = 20, sort = "id", direction = Direction.DESC) Pageable pageable,
-			Model model) {
+	public String index(@ModelAttribute("userCriteria") UserCriteria criteria,
+			@RequestParam(required = false) Boolean search,
+			@PageableDefault(size = 20, sort = "id", direction = Direction.DESC) Pageable pageable,
+			HttpServletRequest request, Model model) {
 
 		model.addAttribute("residenceType", residenceTypeService.findAll());
 		model.addAttribute("buildType", buildTypeService.findAll());
 
-		UserCriteria criteria = userCriteriaService.findByUserAndPrimary(userService.findById(1), true);
+		if (search == null || !search)
+			criteria = userCriteriaService.findByUserAndPrimary(userService.findById(1), true);
 		model.addAttribute("userCriteria", criteria);
 
 		Page<Crawled> crawled = crawledService.findAll(

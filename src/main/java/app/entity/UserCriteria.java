@@ -165,4 +165,12 @@ public class UserCriteria {
 		this.user = user;
 	}
 
+	@Override
+	public String toString() {
+		return "UserCriteria [id=" + id + ", primary=" + primary + ", priceMin=" + priceMin + ", priceMax=" + priceMax
+				+ ", pricePerSquareMin=" + pricePerSquareMin + ", pricePerSquareMax=" + pricePerSquareMax + ", sizeMin="
+				+ sizeMin + ", sizeMax=" + sizeMax + ", type=" + type + ", buildType=" + buildType + ", keywords="
+				+ keywords + ", notifyViaEmail=" + notifyViaEmail + "]";
+	}
+
 }

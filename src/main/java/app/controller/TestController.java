@@ -50,6 +50,7 @@ import app.entity.Crawled;
 import app.entity.CrawledInfo;
 import app.entity.ResidenceType;
 import app.entity.Source;
+import app.entity.User;
 import app.enumerated.SearchOperation;
 import app.repository.specs.CrawledInfoSpecification;
 import app.repository.specs.CrawledSpecification;
@@ -63,6 +64,7 @@ import app.service.CrawledInfoService;
 import app.service.CrawledService;
 import app.service.ResidenceTypeService;
 import app.service.SourceService;
+import app.service.UserService;
 
 @SuppressWarnings("unused")
 @Controller
@@ -86,6 +88,9 @@ public class TestController {
 
 	@Autowired
 	private BuildTypeService buildTypeService;
+	
+	@Autowired
+	private UserService userService;
 
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -392,6 +397,18 @@ public class TestController {
 		str = StringUtils.replaceEach(str, searchList, replacement);
 
 		System.err.println(str);
+	}
+
+	@GetMapping("/jpa/many-to-many")
+	@ResponseBody
+	public void jpaManyToMany() {
+		
+		User user = userService.findById(1);
+		System.err.println(user);
+		
+		Crawled crawled = crawledService.findById(754);
+		System.err.println(crawled);
+		
 	}
 
 }

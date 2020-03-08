@@ -93,4 +93,10 @@ public class UserCrawled {
 		this.compare = compare;
 	}
 
+	@Override
+	public String toString() {
+		return "UserCrawled [id=" + id + ", viewed=" + viewed + ", favourite=" + favourite + ", compare=" + compare
+				+ "]";
+	}
+
 }
