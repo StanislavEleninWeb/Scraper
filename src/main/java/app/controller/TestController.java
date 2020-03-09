@@ -14,6 +14,7 @@ import java.net.URLConnection;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -51,6 +52,7 @@ import app.entity.CrawledInfo;
 import app.entity.ResidenceType;
 import app.entity.Source;
 import app.entity.User;
+import app.entity.UserCrawled;
 import app.enumerated.SearchOperation;
 import app.repository.specs.CrawledInfoSpecification;
 import app.repository.specs.CrawledSpecification;
@@ -88,7 +90,7 @@ public class TestController {
 
 	@Autowired
 	private BuildTypeService buildTypeService;
-	
+
 	@Autowired
 	private UserService userService;
 
@@ -402,13 +404,23 @@ public class TestController {
 	@GetMapping("/jpa/many-to-many")
 	@ResponseBody
 	public void jpaManyToMany() {
-		
+
 		User user = userService.findById(1);
 		System.err.println(user);
-		
-		Crawled crawled = crawledService.findById(754);
+
+		Crawled crawled = crawledService.findById(750);
 		System.err.println(crawled);
 		
+		System.err.println(crawled.getUserCrawled());
+
+		Set<UserCrawled> userCraweldSet = new HashSet<UserCrawled>();
+		
+		userCraweldSet.add(new UserCrawled(user, crawled, true, true, false));
+		
+		crawled.setUserCrawled(userCraweldSet);
+		
+		crawledService.save(crawled);
+
 	}
 
 }

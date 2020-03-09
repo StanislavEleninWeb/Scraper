@@ -24,9 +24,7 @@ $(document).ready(function() {
 	 */
 	document.getElementById("userSearchCriteriaForm").addEventListener("submit", function(e){
 		e.preventDefault();
-		
-		console.log(document.getElementById("priceMin").value);
-		
+				
 		var form = document.createElement("form");
 		
 		form.action = "/";
@@ -131,38 +129,23 @@ $(document).ready(function() {
 		document.body.append(form);
 		form.submit();
 		
-	});
-	
-	/**
-	 * Add event listener on multiple elements for markCrawledUrlAsViewdByUser
-	 */
-	document.getElementById("crawledTableTitle").addEventListener("click", function(){
-		markCrawledUrlAsViewedByUser(this.dataset.crawled, this.dataset.user);
-	});
-	
-	document.getElementById("crawledTableTitleIcon").addEventListener("click", function(){
-		markCrawledUrlAsViewedByUser(this.dataset.crawled, this.dataset.user);
-	});
-	
+	});	
+
+})
+
 	/**
 	 * Send ajax request and mark crawled url for viewd by user
 	 */
 	function markCrawledUrlAsViewedByUser(crawled, user){
-		
+
 		var xhttp = new XMLHttpRequest();
 		
 		xhttp.onreadystatechange = function() {
 		    if (this.readyState == 4 && this.status == 200) {
-		      console.log(this.responseText);
-		      
-		      document.getElementById("crawledTableRow_" + crawled).removeClass("table-secondary")
-		      
+		      document.getElementById("crawledTableRow_" + crawled).classList.remove("table-secondary")
 		    }
 		};
-		  
-		xhttp.open("POST", "", true);
-		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		xhttp.send("crawled=" + crawled + "&user=" + user);
+		
+		xhttp.open("GET", "/rest/crawled/markCrawledUrlAsViewedByUser?crawled=" + crawled + "&user=" + user, true);
+		xhttp.send();
 	};
-
-})

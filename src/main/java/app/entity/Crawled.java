@@ -157,6 +157,19 @@ public class Crawled {
 		this.userCrawled = userCrawled;
 	}
 
+	/**
+	 * Custom function check if crawled url is viewed by user
+	 */
+
+	public Boolean ifCrawledIsViewedByUser(User user) {
+		for (UserCrawled itr : userCrawled) {
+			if (itr.getUser().equals(user) && itr.getViewed() == true)
+				return true;
+		}
+
+		return false;
+	}
+
 	@Override
 	public String toString() {
 		return "Crawled [id=" + id + ", url=" + url + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";

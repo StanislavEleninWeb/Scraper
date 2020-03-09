@@ -1,25 +1,26 @@
 package app.entity;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
 
 @Entity
 public class UserCrawled {
 
-	@EmbeddedId
-	private UserCrawledKey id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	private int id;
 
 	@ManyToOne
-	@MapsId("user_id")
 	@JoinColumn(name = "user_id")
 	private User user;
 
 	@ManyToOne
-	@MapsId("crawled_id")
 	@JoinColumn(name = "crawled_id")
 	private Crawled crawled;
 
@@ -45,11 +46,11 @@ public class UserCrawled {
 		this.compare = compare;
 	}
 
-	public UserCrawledKey getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(UserCrawledKey id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -95,8 +96,8 @@ public class UserCrawled {
 
 	@Override
 	public String toString() {
-		return "UserCrawled [id=" + id + ", viewed=" + viewed + ", favourite=" + favourite + ", compare=" + compare
-				+ "]";
+		return "UserCrawled [id=" + id + ", user=" + user + ", crawled=" + crawled + ", viewed=" + viewed
+				+ ", favourite=" + favourite + ", compare=" + compare + "]";
 	}
 
 }

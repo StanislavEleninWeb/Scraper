@@ -11,7 +11,8 @@
 		<div class="row mt-3">
 
 			<form method="GET" action="#" th:action="@{/}"
-				th:object="${userCriteria}" id="userSearchCriteriaForm" class="form-inline my-2 my-lg-0">
+				th:object="${userCriteria}" id="userSearchCriteriaForm"
+				class="form-inline my-2 my-lg-0">
 
 				<div class="col-2">
 
@@ -150,7 +151,9 @@
 								th:href="@{/?sort=crawledInfo.pricePerSquare,DESC}">PPS</a></th>
 						</tr>
 					</thead>
-					<tr th:each="itr : ${crawled}" th:id="'crawledTableRow_'+${itr.id}" class="table-secondary">
+					<tr th:each="itr : ${crawled}"
+						th:id="'crawledTableRow_' + ${itr.id}"
+						th:classappend="${itr.ifCrawledIsViewedByUser(1)} ? '' : table-secondary">
 						<td th:text="${itr.id}"></td>
 						<td>
 							<div th:if="${!itr.crawledImages.empty}">
@@ -161,15 +164,17 @@
 						<td>
 							<div class="row">
 								<div class="col">
-								<span th:text="${itr.userCrawled}"></span>
-									<a id="crawledTableTitle" class="text-dark" th:href="@{/view/{id}(id=${itr.id})}"
-										target="_blank" th:text="${itr.crawledInfo.title}" th:data-user="1" th:data-crawled="${itr.id}"></a>
+									<a th:onclick="|markCrawledUrlAsViewedByUser('${itr.id}','1')|"
+										class="text-dark" th:href="@{/view/{id}(id=${itr.id})}"
+										target="_blank" th:text="${itr.crawledInfo.title}"
+										th:data-user="1" th:data-crawled="${itr.id}"></a>
 								</div>
 							</div>
 							<div class="row" style="text-align: center;">
 								<div class="col">
-									<a id="crawledTableTitleIcon" th:href="${itr.url}" class="btn btn-sm btn-outline-info"
-										target="_blank"> <span class="select-menu-item-icon"><svg
+									<a id="crawledTableTitleIcon" th:href="${itr.url}"
+										class="btn btn-sm btn-outline-info" target="_blank"> <span
+										class="select-menu-item-icon"><svg
 												class="octicon octicon-search" viewBox="0 0 16 16"
 												version="1.1" width="16" height="16" aria-hidden="true">
 												<path fill-rule="evenodd"
